@@ -1,0 +1,9 @@
+.costFigure {
+    padding-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: rgba(0, 122, 255, 1) !important;
+    /* border-bottom: 4px solid rgba(0, 122, 255, 1) !important; */
+    cursor: grab;
+}

@@ -1,0 +1,14 @@
+.sideTable{
+    width: 100%;
+    height: calc(100vh - 165px);
+    overflow-y: 'auto'
+}
+.sideUp{
+    max-height: 600px;
+}
+.sideDown {
+    /* max-height: calc(100vh - 277px); */
+    max-height: 100px !important;
+    width: 100%;
+    overflow: hidden;
+}

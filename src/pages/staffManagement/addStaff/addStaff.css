@@ -1,0 +1,88 @@
+.addStaffCard {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    border-radius: 10px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+}
+.mainBodyAddStaff{
+    min-height: 100vh;
+    padding-top: 60px;
+    padding-bottom: 40px;
+    overflow: scroll;
+}
+.formHeader {
+    height: 35px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.header {
+    width: 250px;
+    height: 60px;
+    border-radius: 10px;
+    /* background: #ff1903; */
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    position: relative;
+    top: -30px;
+    left: 0px;
+    z-index: 1000;
+}
+
+.header_text {
+    font-size: 22px;
+    color: white;
+    font-weight: 600;
+}
+.profileImgWrp{
+    height: 150px;
+    width: 200px;
+    /* background-color: red; */
+}
+
+.fileUploadContainer {
+    padding: 20px;
+    height: 100%;
+    /* min-height: 150px; */
+    /* margin-top: -30px; */
+    border: 2px dashed blue;
+    border-radius: 10px;
+}
+.fileUploadContainerError {
+    padding: 20px;
+    height: 100%;
+    /* min-height: 150px; */
+    /* margin-top: -30px; */
+    border: 2px dashed red !important;
+    border-radius: 10px;
+}
+
+.fileNameWrp {
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    width: 100%;
+    text-overflow: ellipsis;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.fileName {
+    min-height: 30px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+.fileN {
+    max-width: 85%;
+    width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.profileImg{
+    max-width: 200px;
+    max-height: 150px;
+}

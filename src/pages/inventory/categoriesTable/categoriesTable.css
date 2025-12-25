@@ -1,0 +1,114 @@
+.userTableSubContainer {
+    background-color: #fff;
+    height: 100%;
+    position: relative;
+    /* padding: px; */
+    border-radius: 0.75rem;
+    /* padding-top: 50px; */
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+}
+
+.tableHeader {
+    width: 96%;
+    height: 70px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    position: relative;
+    top: -25px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    padding-top: 22px;
+    padding-left: 20px;
+    padding-right: 20px;
+    z-index: 1000;
+}
+
+.tableContainerWrapper {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.userTableContainer {
+    margin-top: 100px;
+}
+
+.addCategoryBtn {
+    height: 40px;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+
+.addCategoryBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.addCategorySaveBtn {
+    height: 50px;
+    width: 100%;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+
+.addCategorySaveBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.addCategoryCancleBtn {
+    height: 50px;
+    width: 100%;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    color: #fff;
+    background: linear-gradient(195deg, #42424a, #191919);
+}
+
+.addCategoryCancleBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.editCategoryBtn {
+    height: 40px;
+    width: 100px;
+    padding: 5px 15px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+
+.editCategoryBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.deleteCategoryBtn {
+    height: 40px;
+    width: 100px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: #ff1903;
+    color: #fff;
+}
+
+.deleteCategoryBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}

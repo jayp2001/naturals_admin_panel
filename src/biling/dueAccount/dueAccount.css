@@ -1,0 +1,13 @@
+.another_2 {
+    background-color: transparent !important;
+    color: black;
+    border: 1px solid black;
+}
+.button {
+    background-color: rgb(220 38 38 / 1);
+    height: 40px !important;
+}
+
+.button:hover {
+    transform: scale(1.011);
+}

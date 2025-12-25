@@ -1,0 +1,60 @@
+.variant-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.variant-inputs>div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.variant-inputs>div input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.variant-inputs>div:last-child {
+    margin-bottom: 0;
+}
+
+.deleteButton {
+    background: rgb(228, 50, 50) !important;
+    width: 120px !important;
+    margin-left: -3px !important;
+}
+.addTimeFeildButton{
+    width: 120px !important;
+}
+
+.addCategorySaveBtn,
+.addCategoryCancleBtn {
+    height: 54px !important;
+}
+
+.addvariantButton {
+    height: 50px;
+    width: 100%;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+
+.SubCateory.css-1wnsr1i {
+    width: 70% !important;
+}
+
+.css-8ghagd.openTimePopUp {
+    width: 35% !important;
+}
+
+.css-8ghagd.openTimePopUpAnother {
+    width: 35% !important;
+}
+
+.popHeading {
+    font-size: 20px;
+}

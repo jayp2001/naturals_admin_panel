@@ -1,0 +1,31 @@
+.navBar{
+    /* position: relative;
+    top: 0px !important;
+    left: 0px !important; */
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: #fff;
+    height: 60px;
+    z-index: 1000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.logoWrp{
+    margin-left: 20px;
+}
+
+.headerImg{
+    width: 200px;
+    height: fit-content;
+}
+
+.logoutWrp{
+    margin-right: 20px;
+}
+.greeting{
+    font-size: 16px;
+        line-height: 1.625;
+        letter-spacing: 0.0075em;
+        font-weight: 700;
+        text-transform: capitalize;
+        color: rgb(52, 71, 103);
+}

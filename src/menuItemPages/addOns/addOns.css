@@ -1,0 +1,25 @@
+/* Local styles for Add-Ons page */
+.ao-compact-btn {
+  height: 40px !important; /* match MUI TextField size='small' */
+  line-height: 40px !important;
+  padding: 0 16px !important;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Increase specificity to beat global .addCategory* rules */
+.addCategorySaveBtn.ao-compact-btn { height: 40px !important; line-height: 40px !important; padding: 0 16px !important; }
+.addCategoryCancleBtn.ao-compact-btn { height: 40px !important; line-height: 40px !important; padding: 0 16px !important; }
+
+.ao-rtl-input {
+  height: 40px; /* match MUI TextField size='small' */
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  border: 1px solid #cbd5e1; /* slate-300 */
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}

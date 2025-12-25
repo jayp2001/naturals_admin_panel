@@ -1,0 +1,19 @@
+.productNameHeader{
+    white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 60%;
+        color: rgba(0, 0, 0, 0.7);
+        text-align: left;
+        font-weight: bold;
+        max-width: 60%;
+}
+
+.status{
+    width: 40%;
+    max-width: 40%;
+    text-align: left;
+    white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+}

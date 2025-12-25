@@ -1,0 +1,11 @@
+.FixedNewTableHeight{
+    height: calc(100vh - 200px) !important;
+    overflow: auto;
+}
+.CustomePaddingFormTime{
+    padding-left: 40px !important;
+}
+.fixedHeightForTokenViewMobile{
+    height: calc(100vh - 70px) !important;
+    overflow: hidden;
+}

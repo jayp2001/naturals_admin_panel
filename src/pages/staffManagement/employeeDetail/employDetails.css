@@ -1,0 +1,133 @@
+.profileImage{
+    margin-left: 10px;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background-color: red;
+    top: -10px;
+}
+
+.imgDetailWrp{
+    width: 55%
+}
+
+.detailCard{
+    background-color: #fff;
+    border-radius: 0.75rem;
+    width: 100%;
+    min-height: 400px;
+    padding-bottom: 20px;
+    margin-top: 40px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+}
+.alertCss{
+    padding-left: 30px;
+    padding-right: 30px;
+    /* margin-top: 20px; */
+}
+.imgWrpCardDetail {
+    max-height: 200px;
+    max-width: 200px;
+    height: 200px;
+    width: 200px;
+    /* background: red; */
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.imgWrpCardDetail img{
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.nameWrpDetail {
+    /* max-width: 200px; */
+    max-width: 438px;
+    width: 100%;
+    padding-left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.categoryWrpDetail {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 5px;
+    /* font-weight: 600; */
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.detailContainer{
+    max-width: 450px;
+    word-wrap: break-word;
+}
+
+.tableSubContainer {
+    background-color: #fff;
+    /* height: 60px; */
+    position: relative;
+    border-radius: 0.75rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+}
+.mounthRangeSelect{
+    /* width: 100%;
+    padding-left: 10px;
+    padding-right: 10px; */
+}
+.fineReducedComment {
+    max-width: 250px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.bonusTab {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: orange !important;
+    border-bottom: 4px solid orange !important;
+    cursor: pointer;
+}
+
+.displayTable .MuiTableCell-head{
+    background-color: #D3D3D3 !important;
+    /* font-weight: 500 !important; */
+    /* font-size: 16px !important; */
+}
+.displayTableTemp .MuiTableCell-head {
+    background-color: #D3D3D3 !important;
+    /* font-weight: 500 !important; */
+    /* font-size: 16px !important; */
+}
+.displayTable .css-15v22id-MuiAccordionDetails-root{
+    /* background-color: #D3D3D3 !important; */
+    padding: 0px !important;
+    /* font-weight: 500 !important; */
+    /* font-size: 16px !important; */
+}
+.displayTable{
+    -ms-overflow-style: none !important;
+        /* IE and Edge */
+        scrollbar-width: none !important;
+}
+.displayTable{
+    padding-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.calculationFont{
+    font-size: 18px;
+    /* font-weight: 600; */
+}
+.lineBreakHr{
+    border: 1px solid black;
+    width: 50%;
+}

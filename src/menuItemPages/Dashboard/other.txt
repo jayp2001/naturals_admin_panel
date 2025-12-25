@@ -1,0 +1,233 @@
+ <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <div className="text-2xl font-bold">
+                        Add Product
+                    </div>
+                    <hr className='my-6' />
+                    <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-2 ">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Item Name"
+                                variant="outlined"
+                                onChange={(e) => {
+                                    setFullData({ ...fullData, itemName: e.target.value })
+                                }}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Item Gujarati Name"
+                                variant="outlined"
+                                value={itemData.itemGujaratiName}
+                                onChange={(e) => setFullData({ ...fullData, itemGujaratiName: e.target.value })}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Item Code"
+                                variant="outlined"
+                                value={itemData.itemCode}
+                                onChange={(e) => setFullData({ ...fullData, itemCode: e.target.value })}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Item Short Code"
+                                variant="outlined"
+                                value={itemData.itemShortKey}
+                                onChange={(e) => setFullData({ ...fullData, itemShortKey: e.target.value })}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Price"
+                                variant="outlined"
+                                onChange={(e) => addDefaultVariant(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Sub Category</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Sub Category"
+                                    onChange={(e) => {
+                                        const selectedSubCategory = subCategories.find(category => category.subCategoryName === e.target.value);
+                                        console.log(selectedSubCategory)
+                                        if (selectedSubCategory) {
+                                            setFullData(prevItemData => ({
+                                                ...prevItemData,
+                                                itemSubCategory: selectedSubCategory.subCategoryId
+                                            }));
+                                        }
+                                    }}
+                                >
+                                    {subCategories.map((category, index) => (
+                                        <MenuItem key={index} value={category.subCategoryName}>{category.subCategoryName}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="col-span-4">
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Item Description"
+                                variant="outlined"
+                                value={itemData.itemDescription}
+                                onChange={(e) => setFullData({ ...fullData, itemDescription: e.target.value })}
+                            />
+                        </div>
+                        <div className="col-span-4">
+                            <button onClick={() => { handleSUbmitForm() }}>Add </button>
+                        </div>
+                    </div>
+                    <div className="text-2xl my-6 font-bold">
+                        Add Unit
+                    </div>
+                    <hr className='my-6' />
+                    <div className="flex w-full gap-6">
+                        <div className='flex gap-6 w-3/6'>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Age"
+                                    value={unit.unit}
+                                    onChange={(e) => { setUnit({ ...unit, unit: e.target.value }) }}
+                                >
+                                    {getAllUnit && getAllUnit.map((unit, index) => (
+                                        <MenuItem key={index} value={unit}>{unit}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <TextField
+                                id="outlined-basic"
+                                className='w-full'
+                                label="Unit Price"
+                                value={unit.price}
+                                variant="outlined"
+                                onChange={(e) => { setUnit({ ...unit, price: e.target.value }) }}
+                            />
+
+                            <button onClick={addVariantFields} className='addProductBtn h-full w-full mt-2'>Add </button>
+                        </div>
+                        <div>
+                            {variantFields.map((period, index) => (
+                                <div key={index} className="flex w-full mt-2 gap-3">
+                                    <div className='w-1/2'>
+                                        {console.log(period)}
+                                        <TextField
+                                            id="outlined-basic"
+                                            className='w-full'
+                                            label="Unit Name"
+                                            variant="outlined"
+                                            disabled
+                                            value={period.variantName}
+                                        />
+                                    </div>
+                                    <div className='w-1/2'>
+                                        <TextField
+                                            id="outlined-basic"
+                                            className='w-full'
+                                            label="Unit Price"
+                                            disabled
+                                            variant="outlined"
+                                            value={period.variantPrice}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </Box>
+            </Modal>
+            <Modal
+                open={editPricePopUp}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+
+            >
+                <Box sx={style} className='priceEdit'>
+                    <FormControl>
+                        <p className='text-2xl mb-5 font-semibold'>Price Change</p>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                        >
+                            <div className="flex">
+                                <FormControlLabel
+                                    checked={editPriceType.percentage ? true : false}
+                                    onClick={() => setEditPriceType({ percentage: true })}
+                                    value="Percentage"
+                                    control={<Radio />}
+                                    label="Percentage"
+                                />
+                                <FormControlLabel
+                                    onClick={() => setEditPriceType({ fixed: true })}
+                                    value="Fixed"
+                                    control={<Radio />}
+                                    label="Fixed"
+                                />
+                            </div>
+                        </RadioGroup>
+                    </FormControl>
+                    {editPriceType.percentage && (
+                        <div className='mt-2 w-full'>
+                            <FormControl sx={{ m: 1, width: '25ch' }} variant="standard" className='w-full formControl'>
+                                <TextField
+                                    variant='outlined'
+                                    id="standard-adornment-weight"
+                                    aria-describedby="standard-weight-helper-text"
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        'aria-label': 'weight',
+                                    }}
+                                    onChange={(e) => {
+                                        setEditPrice({ percentage: e.target.value })
+                                    }}
+                                    className='w-full'
+                                />
+                            </FormControl>
+                        </div>
+                    )}
+                    {editPriceType.fixed && (
+                        <div className='mt-2'>
+                            <TextField
+                                id="outlined-basic"
+                                label="Fixed"
+                                variant="outlined"
+                                onChange={(e) => {
+                                    setEditPrice({ fixed: e.target.value })
+                                }}
+                            />
+                        </div>
+                    )}
+                    <div className="mt-5 w-full">
+                        <div className="flex w-full">
+                            <button onClick={editPriceValue} className="bg-green-500 w-2/4 text-white py-2 px-4 rounded-lg mr-2">Save</button>
+                            <button className="bg-gray-300 text-gray-800 py-2 px-4 w-2/4 rounded-lg">Cancel</button>
+
+                        </div>
+                    </div>
+                </Box>
+            </Modal>

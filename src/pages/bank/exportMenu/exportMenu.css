@@ -1,0 +1,24 @@
+.exportBtn {
+    height: 40px;
+    width: 200px;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+.exportBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
+
+.disableExport{
+    height: 40px;
+        width: 200px;
+        padding: 5px 15px;
+        text-align: center;
+        border-radius: 5px;
+    background: linear-gradient(195deg, #ebeff4, #ced4da);
+        cursor: not-allowed;
+        color: #fff;
+}

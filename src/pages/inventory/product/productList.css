@@ -1,0 +1,150 @@
+.productListContainer {
+    margin-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 0px;
+    padding-bottom: 10px;
+}
+
+.productCardContainer {
+    height: 73vh;
+    overflow: scroll;
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+
+.productCardContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.productTableSubContainer {
+    background-color: #fff;
+    height: 60px;
+    position: relative;
+    border-radius: 0.75rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem, rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
+}
+
+.tableHeader {
+    width: 96%;
+    height: 70px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    position: relative;
+    top: -25px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    padding-top: 22px;
+    padding-left: 20px;
+    padding-right: 20px;
+    z-index: 1000;
+}
+
+.tableContainerWrapper {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.productTabAll {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: rgba(0, 122, 255, 1) !important;
+    border-bottom: 4px solid rgba(0, 122, 255, 1) !important;
+    cursor: grab;
+}
+
+.productTabUnder {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: orange !important;
+    border-bottom: 4px solid orange !important;
+    cursor: pointer;
+}
+
+.productTabIn {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: green !important;
+    border-bottom: 4px solid green !important;
+    cursor: pointer;
+}
+
+.productTabOut {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: #FF6347 !important;
+    border-bottom: 4px solid #FF6347 !important;
+    cursor: pointer;
+}
+
+.productTab {
+    padding-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    cursor: pointer;
+}
+
+.ProductCount {
+    height: 25px;
+    padding-top: 3px;
+    width: 25px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.blueCount {
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+}
+
+.greenCount {
+    background: green;
+}
+
+.orangeCount {
+    background: orange;
+}
+
+.redCount {
+    background: #FF6347;
+}
+
+.noDataFoundText {
+    font-size: 24px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+
+}
+
+.statusTabtext {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.addProductBtn {
+    height: 40px;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 122, 255, 1) 0%, rgba(0, 156, 255, 1) 78%);
+    color: #fff;
+}
+
+.addProductBtn:hover {
+    transform: scale(1.011);
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+}
