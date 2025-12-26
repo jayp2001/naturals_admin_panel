@@ -154,7 +154,6 @@ function App() {
             <Route path='*' element={<PageNotFoundRedirect />} />
             <Route path='/menu/Dashboard' element={<MenuDashboard />} />
             <Route path='/menu/salesReport' element={<CategoryBusinessReport />} />
-            <Route path='/menu/Category' element={<AddCategory />} />
             <Route path='/menu/Unit' element={<Unit />} />
             <Route path='/menu/SubCategory' element={<SubCategory />} />
             <Route path='/menu/addOns' element={<AddOns />} />

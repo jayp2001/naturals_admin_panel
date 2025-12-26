@@ -351,7 +351,6 @@ function BillCategories() {
                                     <TableCell>Category</TableCell>
                                     <TableCell>Menu Category</TableCell>
                                     <TableCell>Firm Name</TableCell>
-                                    <TableCell>Is Official</TableCell>
                                     <TableCell align="center">Action</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -377,9 +376,6 @@ function BillCategories() {
                                             </TableCell>
                                             <TableCell align="left">
                                                 {category.firmName || '-'}
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                {category.isOfficial === 1 ? 'Yes' : 'No'}
                                             </TableCell>
                                             <TableCell align="center">
                                                 <IconButton
@@ -411,7 +407,7 @@ function BillCategories() {
                                                 fontWeight: '500',
                                                 padding: '40px',
                                             }}
-                                            colSpan={6}
+                                            colSpan={5}
                                         >
                                             {loading ? 'Loading...' : 'No Data Found...!'}
                                         </TableCell>

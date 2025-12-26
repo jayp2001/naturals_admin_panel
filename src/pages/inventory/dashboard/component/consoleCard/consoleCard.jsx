@@ -17,6 +17,10 @@ import khatabook from '../../../../../assets/billing/account.png'
 import sales from '../../../../../assets/billing/salesReport.png'
 import analyze from '../../../../../assets/billing/analyze.png'
 import Menu from '../../../../../assets/menu.png'
+import comment from '../../../../../assets/comment.png'
+import gst from '../../../../../assets/gst.png'
+import upi from '../../../../../assets/upi.svg'
+import billcategory from '../../../../../assets/billcategory.png'
 function ConsoleCard(props) {
     const getImg = (imgname) => {
         switch (imgname) {
@@ -50,6 +54,16 @@ function ConsoleCard(props) {
                 return analyze;
             case 'Menu':
                 return Menu;
+            case 'comment':
+                return comment;
+            case 'upi':
+                return upi;
+            case 'firm':
+                return gst;
+            case 'customer':
+                return userList;
+            case 'category':
+                return billcategory;
             default:
                 return userAdd;
         }

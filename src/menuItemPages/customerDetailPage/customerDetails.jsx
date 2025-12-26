@@ -520,10 +520,10 @@ function CustomerDetails() {
                                 (() => {
                                     const keys = getStatisticsKeys();
                                     const rows = [];
-                                    for (let i = 0; i < keys.length; i += 4) {
+                                    for (let i = 0; i < keys.length; i += 3) {
                                         rows.push(
-                                            <div key={i} className='grid grid-cols-4 gap-2'>
-                                                {keys.slice(i, i + 4).map((key) => (
+                                            <div key={i} className='grid grid-cols-3 gap-2'>
+                                                {keys.slice(i, i + 3).map((key) => (
                                                     <SimpleCountCard
                                                         key={key}
                                                         color={getColorForKey(key)}

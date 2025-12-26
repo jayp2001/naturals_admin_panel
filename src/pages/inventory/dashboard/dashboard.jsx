@@ -180,26 +180,6 @@ function Dashboard() {
             }
         }
     }
-    const goToAddOns = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/menu/addOns')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToAddonGroup = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/menu/addOns')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
     const goToComment = () => {
         const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
         if (auth) {
@@ -260,8 +240,6 @@ function Dashboard() {
 
                     <ConsoleCard goToAddUSer={goToMenu} name={"Menu"} imgName={'Menu'} />
                     <ConsoleCard goToAddUSer={goToSales} name={"Sales Report"} imgName={'sales'} />
-                    <ConsoleCard goToAddUSer={goToAddOns} name={"Add-Ons"} imgName={'addon'} />
-                    <ConsoleCard goToAddUSer={goToAddonGroup} name={"Addon Group"} imgName={'group'} />
                     <ConsoleCard goToAddUSer={goToComment} name={"Comments"} imgName={'comment'} />
                     <ConsoleCard goToAddUSer={goToUPI} name={"UPI"} imgName={'upi'} />
                     <ConsoleCard goToAddUSer={goToFirmList} name={"Firm List"} imgName={'firm'} />

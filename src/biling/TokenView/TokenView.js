@@ -7,7 +7,7 @@ import FullScreenVideo from './videoPlayer';
 import './video.css'
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-import bhagwatiHeaderLogo from '../../assets/bhagwatiHeaderLogo.png';
+import bhagwatiHeaderLogo from '../../assets/NATURAL_LOGO.jpg';
 import bhagwatiLogo from '../../assets/bhagwatiLogo.png';
 import { useNavigate } from "react-router-dom";
 

@@ -108,12 +108,9 @@ function SubCategory() {
     const [editIndex, setEditIndex] = React.useState(-1);
     const [categoryName, setCategoryName] = useState('');
     const [reloadData, setReloadData] = useState(Date.now());
-    const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
 
     const [categoryRank, setCategoryRank] = useState('');
-    const [mainCategoryId, setMainCategoryId] = useState();
-    const [mainCategoryName, setMainCategoryName] = useState('')
     const [openTime, setOpenTime] = useState(false);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
@@ -133,12 +130,9 @@ function SubCategory() {
     const [categoryUpdatePopUp, setCategoryUpdatePopUp] = useState(false)
     const [categoryUpdateName, setCategoryUpdateName] = useState()
     const [categoryUpdateData, setCategoryupdatData] = useState();
-    const [categoryUpdateMenuName, setCategoryUpdateMenuName] = useState();
     const [categoryUpdateCategoryRank, setCategoryUpdateCategoryRank] = useState()
-    const [menuCategoryId, setMenuCategoryId] = useState();
     const [feildError, setFeildError] = useState({
         name: false,
-        mainCategory: false,
         categoryRank: false
     })
     const [noItem, setNoItem] = useState(true)
@@ -196,18 +190,6 @@ function SubCategory() {
         }
     ]);
 
-    const getAllCategory = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getMainCategory`, config);
-            setCategories(response.data);
-        } catch (error) {
-            if (error) {
-                const errorMsg = error?.response?.data;
-                setError(errorMsg || 'Network Error !!!...')
-            }
-        }
-    }
     const getSubCategory = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -308,7 +290,6 @@ function SubCategory() {
     const handleCreateCategory = async () => {
         const formValidation = {
             name: categoryName.trim().length === 0,
-            mainCategory: mainCategoryName.trim().length === 0,
             categoryRank: categoryRank.trim().length === 0
         }
         setFeildError(formValidation)
@@ -321,16 +302,13 @@ function SubCategory() {
         const token = localStorage.getItem('token');
         try {
             const response = await axios.post(`${BACKEND_BASE_URL}menuItemrouter/addSubCategoryData`, {
-                categoryId: mainCategoryId.categoryId,
                 subCategoryName: categoryName,
                 displayRank: categoryRank
             }, config);
 
             if (response.data === 'SubCategory Added Successfully') {
-                getAllCategory();
                 getSubCategory();
                 setCategoryName('');
-                setMainCategoryName('');
                 setCategoryRank('');
                 setSuccess('SubCategory Added Successfully');
                 autoFocus.current && autoFocus.current.focus();
@@ -345,22 +323,11 @@ function SubCategory() {
     }
     const handleUpdateData = (categoryData) => {
         setCategoryupdatData(categoryData)
-        // const menuCategoryId = categories.find(main => main.categoryId === categoryData.mainCategory)
-        setCategoryUpdateMenuName(categoryData?.categoryName)
-        // console.log('menuId', menuCategoryId)
-        setMenuCategoryId(categoryData?.categoryId)
-        // console.log('Sub CategoryId', categoryData)
-        // // setMenuCategoryId(menuCategoryId.categoryId)
         setCategoryUpdateCategoryRank(categoryData.displayRank)
-    }
-    const handleEdit = (index) => {
-        setEditIndex(index);
-        setCategoryName(categories[index].categoryName);
     }
     const handleUpdateUnit = async () => {
         const formValidation = {
             name: categoryUpdateName?.length === 0,
-            mainCategory: categoryUpdateMenuName?.length === 0,
             categoryRank: categoryUpdateCategoryRank?.length === 0
         }
         setFeildError(formValidation)
@@ -373,7 +340,6 @@ function SubCategory() {
         try {
             const data = {
                 subCategoryId: categoryUpdateData.subCategoryId,
-                mainCategory: menuCategoryId,
                 subCategoryName: categoryUpdateName,
                 displayRank: categoryUpdateCategoryRank
             }
@@ -381,14 +347,12 @@ function SubCategory() {
                 `${BACKEND_BASE_URL}menuItemrouter/updateSubCategoryData`,
                 {
                     subCategoryId: data.subCategoryId,
-                    categoryId: data.mainCategory,
                     subCategoryName: data.subCategoryName,
                     displayRank: data.displayRank
                 },
                 config
             );
             setSuccess('Category Updated Successfully')
-            getAllCategory();
             getSubCategory();
             handleClose();
             setCategoryUpdatePopUp(false)
@@ -415,7 +379,6 @@ function SubCategory() {
                     config
                 );
                 if (response.data === 'SubCategory Deleted Successfully') {
-                    getAllCategory();
                     getSubCategory();
                     setSuccess('SubCategory Deleted Successfully')
                     setCategoryUpdatePopUp(false)
@@ -514,7 +477,6 @@ function SubCategory() {
                 setSuccess(true);
                 setTimeSave('Edit');
                 setOpenTime(false)
-                getAllCategory();
                 getSubCategory();
                 setTime({ from: null, to: null });
             }
@@ -522,7 +484,6 @@ function SubCategory() {
                 setSuccess(true);
                 setTimeSave('Edit');
                 setOpenTime(false)
-                getAllCategory();
                 getSubCategory();
                 setTime({ from: null, to: null });
             }
@@ -542,7 +503,6 @@ function SubCategory() {
 
 
     useEffect(() => {
-        getAllCategory();
         getSubCategory();
     }, [page, rowsPerPage, filter]);
 
@@ -569,14 +529,6 @@ function SubCategory() {
         }
     };
 
-    const handleCategoryNameUpdate = (e) => {
-        setCategoryUpdateMenuName(e.target.value)
-        setFeildError(prev => ({ ...prev, mainCategory: false }))
-        const menuCategoryId = categories.find(main => main.categoryName === e.target.value)
-        console.log('menuCategoryId', menuCategoryId)
-        const id = menuCategoryId?.categoryId
-        setMenuCategoryId(id)
-    }
 
     return (
         <div className='BilingDashboardContainer mx-4 p-3'>
@@ -664,7 +616,6 @@ function SubCategory() {
                                     <TableRow>
                                         <TableCell className=''>No.</TableCell>
                                         <TableCell>Name</TableCell>
-                                        <TableCell>Category Name</TableCell>
                                         <TableCell>Display Rank</TableCell>
                                         <TableCell>Total Business</TableCell>
                                         <TableCell align='right' className='pr-14' style={{ paddingRight: '56px' }}>Actions</TableCell>
@@ -684,9 +635,6 @@ function SubCategory() {
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {category.subCategoryName}
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {category.categoryName}
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {category.displayRank}
@@ -761,29 +709,6 @@ function SubCategory() {
                                     inputRef={autoFocus}
                                     autoComplete='off'
                                 />
-                                <div className='w-full'>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Main Category</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            label="Main Category"
-                                            onChange={(e) => {
-                                                setMainCategoryName(e.target.value)
-                                                setFeildError({ ...feildError, mainCategory: false })
-                                            }}
-                                            error={feildError.mainCategory ? true : false}
-                                            value={mainCategoryName}
-                                            className='w-full'
-                                        >
-                                            {categories.map((category, index) => (
-                                                <MenuItem value={category.categoryName} onClick={() => setMainCategoryId(category)} key={index}>
-                                                    {category.categoryName}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </div>
                                 <TextField
                                     value={categoryRank}
                                     onChange={handleCategoryRankChange}
@@ -802,9 +727,8 @@ function SubCategory() {
                                     <button onClick={() => {
                                         setOpen(false);
                                         setCategoryRank('');
-                                        setMainCategoryName('');
                                         setCategoryName('');
-                                        setFeildError({ name: false, mainCategory: false, categoryRank: false });
+                                        setFeildError({ name: false, categoryRank: false });
                                     }} className="addCategoryCancleBtn bg-gray-700">Cancel</button>
                                 </div>
                             </div>
@@ -841,31 +765,6 @@ function SubCategory() {
                                     className="w-full  col-span-3 mb-6"
 
                                 />
-                                <div className='w-full'>
-                                    <FormControl fullWidth >
-                                        <InputLabel id="demo-simple-select-label">Main Category</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            label="Main Category"
-                                            onChange={(e) => {
-                                                handleCategoryNameUpdate(e);
-                                            }}
-                                            error={feildError.mainCategory ? true : false}
-                                            helperText={feildError.mainCategory ? 'Main Category Is Required' : ''}
-                                            value={categoryUpdateMenuName}
-                                            className='w-full'
-
-                                        >
-                                            {categories.map((category, index) => (
-                                                <MenuItem value={category.categoryName} onClick={() => setMainCategoryId(category.categoryId)} key={index}>
-                                                    {category.categoryName}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        {console.log('modal --> ', categoryUpdateMenuName)}
-                                    </FormControl>
-                                </div>
                                 <TextField
                                     value={categoryUpdateCategoryRank}
                                     onChange={(e) => {

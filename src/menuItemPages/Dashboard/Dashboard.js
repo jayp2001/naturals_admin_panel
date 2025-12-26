@@ -1158,9 +1158,14 @@ function MenuDashboard() {
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
     const handleVariantPriceChange = (event, itemIndex, variantIndex) => {
         const { value } = event.target;
-        const updatedItemData = [...itemData];
-        updatedItemData[itemIndex].variantsList[variantIndex].price = value;
-        setItemData(updatedItemData);
+        // Regex to allow only numbers and decimals (e.g., 123, 123.45, .45)
+        const regex = /^\d*\.?\d*$/;
+
+        if (regex.test(value)) {
+            const updatedItemData = [...itemData];
+            updatedItemData[itemIndex].variantsList[variantIndex].price = value;
+            setItemData(updatedItemData);
+        }
     };
     const handlePriceChange = (event, index) => {
         const { value } = event.target;
@@ -1280,7 +1285,6 @@ function MenuDashboard() {
             )
                 .then(response => {
                     console.log('Favourite status updated:', response.data);
-                    setSuccess(true);
                     // Refresh the item list to get updated data
                     handleSubCategoryClick(finalSelected, menuId);
                 })

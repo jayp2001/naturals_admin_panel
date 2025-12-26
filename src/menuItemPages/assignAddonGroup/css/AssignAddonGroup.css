@@ -3,7 +3,7 @@
     overflow: hidden !important;
 }
 .CustomDashBoardTableHeightPriceEdit {
-    max-height: calc(100vh - 226px) !important;
+    max-height: calc(100vh - 162px) !important;
     overflow: auto !important;
 }
 
