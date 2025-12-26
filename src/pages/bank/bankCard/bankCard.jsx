@@ -1,6 +1,6 @@
 import './bankCard.css'
 import deliveryBoyLogo from '../../../assets/deliveryBoy.svg'
-import bhagwatiLogo from '../../../assets/bhagwatiLogo.png';
+import bhagwatiLogo from '../../../assets/NATURAL_LOGO.jpg';
 import BOB from '../../../assets/bank/BOBBANK.png';
 import CentralBank from '../../../assets/bank/CENTRALBANK.png';
 import DenaBank from '../../../assets/bank/DENABANK.webp';

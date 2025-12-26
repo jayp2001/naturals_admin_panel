@@ -1,6 +1,6 @@
 import './login.css';
 import React from 'react';
-import bhagwatiLogo from '../../assets/bhagwatiLogo.png';
+import bhagwatiLogo from '../../assets/NATURAL_LOGO.jpg';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -96,8 +96,8 @@ function LoginPage() {
     }, []);
     return (
         <div className="grid grid-rows-1 tablet:h-screen tablet:pb-0 tablet:pt-0 tablet1:h-screen tablet1:pb-0  tablet1:pt-0 mobile:h-screen mobile:pb-20">
-            <div className="grid grid-cols-12 h-full grid content-center">
-                <div className="tablet:col-span-6 tablet1:col-span-6 mobile:col-span-12">
+            <div className="grid grid-cols-12 h-full content-center">
+                <div className="tablet:col-span-6 tablet1:col-span-6 grid content-center mobile:col-span-12">
                     <div className='grid grid-cols-12'>
                         <div className='tablet1:col-span-8 mobile:col-start-4 mobile:col-span-6 tablet1:col-start-3'>
                             <div className="logoMobile">

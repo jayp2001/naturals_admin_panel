@@ -1,6 +1,6 @@
 import './consoleCard.css'
 import deliveryBoyLogo from '../../../../../assets/deliveryBoy.svg'
-import bhagwatiLogo from '../../../../../assets/bhagwatiLogo.png';
+import bhagwatiLogo from '../../../../../assets/NATURAL_LOGO.jpg';
 import other1 from '../../../../../assets/mainCategory/other1.png';
 import other2 from '../../../../../assets/mainCategory/other2.png';
 import debt from '../../../../../assets/mainCategory/debt.png';
