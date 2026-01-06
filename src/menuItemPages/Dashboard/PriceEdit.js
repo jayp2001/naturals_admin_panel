@@ -338,7 +338,7 @@ function Dashboard() {
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = userInfo.token;
             const response = await axios.post(
                 `${BACKEND_BASE_URL}menuItemrouter/addItemData`,
                 fullData,
@@ -382,7 +382,7 @@ function Dashboard() {
         }
     };
     const getAllCategory = async () => {
-        const token = localStorage.getItem('token');
+        const token = userInfo.token;
         try {
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getMenuCategory`, config);
             setMenuCategory(response.data)
@@ -393,7 +393,7 @@ function Dashboard() {
     }
     const getAllItems = async (menuId) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = userInfo.token;
             if (!token) {
                 throw new Error("Token not found");
             }
@@ -413,7 +413,7 @@ function Dashboard() {
 
         if (enteredPassword === password) {
             try {
-                const token = localStorage.getItem('token');
+                const token = userInfo.token;
                 const response = await axios.delete(`${BACKEND_BASE_URL}menuItemrouter/removeItemData?itemId=${id}`, config)
                 setSuccess(response.data)
                 getAllCategory();
@@ -529,7 +529,7 @@ function Dashboard() {
     };
     const getSubCategory = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = userInfo.token;
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/ddlSubCategory`, config);
             const subCategories = response.data;
             setSubCategories(subCategories);
@@ -553,7 +553,7 @@ function Dashboard() {
     };
     const getAllUnits = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = userInfo.token;
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getUnit`, config);
             setGetAllUnit(response.data);
         } catch (error) {
@@ -565,7 +565,7 @@ function Dashboard() {
         setClickedSubCategory(subCategoryId);
         setSubCategoryFirstId(subCategoryId)
         setFinalSelected(subCategoryId)
-        const token = localStorage.getItem('token');
+        const token = userInfo.token;
         try {
             setSideBarColor(true)
             await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getItemData?menuId=${menuId}&subCategoryId=${subCategoryId}`, config)
@@ -619,7 +619,7 @@ function Dashboard() {
         handleClose();
     };
     const handleEditPrice = async () => {
-        const token = localStorage.getItem('token');
+        const token = userInfo.token;
 
         try {
             const response = await axios.post(`${BACKEND_BASE_URL}menuItemrouter/updateMultipleItemPrice`, itemData, config)
