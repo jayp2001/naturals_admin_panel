@@ -42,11 +42,12 @@ import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Button, Checkbox, Divider, FilledInput, FormControlLabel, FormHelperText, FormLabel, Input, InputAdornment, Paper, Radio, RadioGroup, Switch } from '@mui/material';
+import { Button, Checkbox, Divider, FilledInput, FormControlLabel, FormHelperText, FormLabel, Input, InputAdornment, Paper, Popover, Radio, RadioGroup, Switch } from '@mui/material';
 import { ReactTransliterate } from 'react-transliterate';
 import { getUnit } from '@mui/material/styles/cssUtils';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import NumpadPopover from './NumpadPopover';
 
 const Fade = React.forwardRef(function Fade(props, ref) {
     const {
@@ -446,6 +447,11 @@ function MenuDashboard() {
     const autoFocus = useRef(null)
     const [isDragDropMode, setIsDragDropMode] = useState(false);
     const [tempSubCategories, setTempSubCategories] = useState([]);
+    const [numpadAnchor, setNumpadAnchor] = useState(null);
+    const [numpadField, setNumpadField] = useState({ itemIndex: null, variantIndex: null });
+    const [numpadValue, setNumpadValue] = useState('');
+    const [editPriceNumpadAnchor, setEditPriceNumpadAnchor] = useState(null);
+    const [editPriceNumpadValue, setEditPriceNumpadValue] = useState('');
     if (loading) {
         toast.loading("Please wait...", {
             toastId: 'loading'
@@ -1167,6 +1173,70 @@ function MenuDashboard() {
             setItemData(updatedItemData);
         }
     };
+
+    const handleNumpadOpen = (event, itemIndex, variantIndex) => {
+        // Prevent opening if already open for this field
+        if (numpadAnchor && numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex) {
+            return;
+        }
+
+        const currentPrice = itemData[itemIndex]?.variantsList[variantIndex]?.price || '';
+        setNumpadValue(String(currentPrice));
+        setNumpadField({ itemIndex, variantIndex });
+        setNumpadAnchor(event.currentTarget);
+    };
+
+    const handleNumpadClose = () => {
+        setNumpadAnchor(null);
+        setNumpadValue('');
+        setNumpadField({ itemIndex: null, variantIndex: null });
+
+        // Blur the active element to prevent immediate refocus
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+    };
+
+    const handleNumpadChange = (newValue) => {
+        setNumpadValue(newValue);
+
+        // Update the price value in real-time
+        const { itemIndex, variantIndex } = numpadField;
+        if (itemIndex !== null && variantIndex !== null) {
+            const regex = /^\d*\.?\d*$/;
+            if (regex.test(newValue) || newValue === '') {
+                const updatedItemData = [...itemData];
+                updatedItemData[itemIndex].variantsList[variantIndex].price = newValue || '';
+                setItemData(updatedItemData);
+            }
+        }
+    };
+
+    const handleEditPriceNumpadOpen = (event) => {
+        const currentValue = editPriceType.percentage ? editPrice.percentage : editPrice.fixed;
+        setEditPriceNumpadValue(String(currentValue || ''));
+        setEditPriceNumpadAnchor(event.currentTarget);
+    };
+
+    const handleEditPriceNumpadClose = () => {
+        setEditPriceNumpadAnchor(null);
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+    };
+
+    const handleEditPriceNumpadChange = (newValue) => {
+        setEditPriceNumpadValue(newValue);
+
+        const regex = /^\d*\.?\d*$/;
+        if (regex.test(newValue) || newValue === '') {
+            if (editPriceType.percentage) {
+                setEditPrice({ percentage: newValue, fixed: '' });
+            } else if (editPriceType.fixed) {
+                setEditPrice({ percentage: '', fixed: newValue });
+            }
+        }
+    };
     const handlePriceChange = (event, index) => {
         const { value } = event.target;
         const updatedVariantEditData = [...variantEditData];
@@ -1863,11 +1933,27 @@ function MenuDashboard() {
                                                                     InputProps={{
                                                                         endAdornment: <InputAdornment position="end">{variant.unit}</InputAdornment>,
                                                                         'aria-label': 'weight',
+                                                                        readOnly: true,
                                                                     }}
                                                                     value={variant.price}
-                                                                    onChange={(event) => handleVariantPriceChange(event, itemIndex, variantIndex)}
+                                                                    onClick={(event) => handleNumpadOpen(event, itemIndex, variantIndex)}
                                                                     className=''
                                                                     autoComplete="off"
+                                                                    sx={{
+                                                                        cursor: 'pointer',
+                                                                        '& .MuiInput-root': {
+                                                                            '&:before': {
+                                                                                borderBottom: numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex && Boolean(numpadAnchor)
+                                                                                    ? '2px solid #1a73e8 !important'
+                                                                                    : undefined,
+                                                                            },
+                                                                            '&:after': {
+                                                                                borderBottom: numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex && Boolean(numpadAnchor)
+                                                                                    ? '2px solid #1a73e8 !important'
+                                                                                    : undefined,
+                                                                            }
+                                                                        }
+                                                                    }}
                                                                 />
                                                             </FormControl>
                                                         ))) : (
@@ -2417,13 +2503,23 @@ function MenuDashboard() {
                                     label="Percentage"
                                     autoComplete="off"
                                     value={editPrice.percentage}
-                                    onChange={handlePercentageChange}
+                                    onClick={handleEditPriceNumpadOpen}
                                     error={!!inputError}
                                     helperText={inputError}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                        readOnly: true,
                                     }}
                                     className='w-full'
+                                    sx={{
+                                        cursor: 'pointer',
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: Boolean(editPriceNumpadAnchor) ? '#1a73e8' : undefined,
+                                                borderWidth: Boolean(editPriceNumpadAnchor) ? '2px' : undefined,
+                                            }
+                                        }
+                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -2437,13 +2533,23 @@ function MenuDashboard() {
                                     label="Fixed Amount"
                                     autoComplete="off"
                                     value={editPrice.fixed}
-                                    onChange={handleFixedChange}
+                                    onClick={handleEditPriceNumpadOpen}
                                     error={!!inputError}
                                     helperText={inputError}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end"><CurrencyRupeeIcon /></InputAdornment>,
+                                        readOnly: true,
                                     }}
                                     className='w-full'
+                                    sx={{
+                                        cursor: 'pointer',
+                                        '& .MuiOutlinedInput-root': {
+                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: Boolean(editPriceNumpadAnchor) ? '#1a73e8' : undefined,
+                                                borderWidth: Boolean(editPriceNumpadAnchor) ? '2px' : undefined,
+                                            }
+                                        }
+                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -2853,6 +2959,20 @@ function MenuDashboard() {
                     </div>
                 </Box>
             </Modal>
+            <NumpadPopover
+                open={Boolean(numpadAnchor)}
+                anchorEl={numpadAnchor}
+                onClose={handleNumpadClose}
+                value={numpadValue}
+                onChange={handleNumpadChange}
+            />
+            <NumpadPopover
+                open={Boolean(editPriceNumpadAnchor)}
+                anchorEl={editPriceNumpadAnchor}
+                onClose={handleEditPriceNumpadClose}
+                value={editPriceNumpadValue}
+                onChange={handleEditPriceNumpadChange}
+            />
             <ToastContainer />
         </div >
     )

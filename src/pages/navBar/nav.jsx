@@ -1,5 +1,5 @@
 import './nav.css'
-import bhagwatiHeaderLogo from '../../assets/NATURAL_LOGO.jpg';
+import naturalHeaderLogo from '../../assets/NATURAL_LOGO.jpg';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from "react-router-dom";
@@ -1177,7 +1177,7 @@ function NavBar() {
                                 : null
                         }
                         <div>
-                            <img className='headerImg' src={bhagwatiHeaderLogo} alt='No Image Found' />
+                            <img className='headerImg' src={naturalHeaderLogo} alt='No Image Found' />
                         </div>
                     </div>
                     <div className='logoutWrp flex justify-end'>
@@ -1225,7 +1225,7 @@ function NavBar() {
                             : null
                     }
                     <div>
-                        <img className='headerImg' src={bhagwatiHeaderLogo} alt='No Image Found' />
+                        <img className='headerImg' src={naturalHeaderLogo} alt='No Image Found' />
                     </div>
                 </div>
                 <div className='logoutWrp flex justify-end'>

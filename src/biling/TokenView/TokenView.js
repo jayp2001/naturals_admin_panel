@@ -7,7 +7,7 @@ import FullScreenVideo from './videoPlayer';
 import './video.css'
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
-import bhagwatiHeaderLogo from '../../assets/NATURAL_LOGO.jpg';
+import naturalHeaderLogo from '../../assets/NATURAL_LOGO.jpg';
 import bhagwatiLogo from '../../assets/NATURAL_LOGO.jpg';
 import { useNavigate } from "react-router-dom";
 
@@ -180,7 +180,7 @@ const TokenView = () => {
                     }}
                 >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src={bhagwatiHeaderLogo} alt='No Image Found' style={{ width: '200px', height: 'fit-content' }} />
+                        <img src={naturalHeaderLogo} alt='No Image Found' style={{ width: '200px', height: 'fit-content' }} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
                         <div
