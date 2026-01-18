@@ -452,12 +452,6 @@ function BillCategories() {
                                 </span>
                             </div>
                             <div className='detailRow'>
-                                <span className='detailLabel'>Is Official:</span>
-                                <span className='detailValue'>
-                                    {selectedCategory.isOfficial === 1 ? 'Yes' : 'No'}
-                                </span>
-                            </div>
-                            <div className='detailRow'>
                                 <span className='detailLabel'>Category Status:</span>
                                 <span className='detailValue'>
                                     {selectedCategory.categoryStatus === 1 ? 'Active' : 'Inactive'}
@@ -534,17 +528,7 @@ function BillCategories() {
                                     </Select>
                                 </FormControl>
                             </div>
-                            <div className='formRowGrid'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={formData.isOfficial === 1}
-                                            onChange={handleSwitchChange('isOfficial')}
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Is Official"
-                                />
+                            <div className='formRow'>
                                 <FormControlLabel
                                     control={
                                         <Switch

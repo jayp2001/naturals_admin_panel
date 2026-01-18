@@ -26,7 +26,6 @@ import Modal from '@mui/material/Modal';
 import { styled, alpha } from '@mui/material/styles';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import CategoryIcon from '@mui/icons-material/Category';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { useSpring, animated } from '@react-spring/web';
@@ -43,12 +42,11 @@ import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Button, Checkbox, Divider, FilledInput, FormControlLabel, FormHelperText, FormLabel, Input, InputAdornment, Paper, Popover, Radio, RadioGroup, Switch } from '@mui/material';
+import { Button, Checkbox, Divider, FilledInput, FormControlLabel, FormHelperText, FormLabel, Input, InputAdornment, Paper, Radio, RadioGroup, Switch } from '@mui/material';
 import { ReactTransliterate } from 'react-transliterate';
 import { getUnit } from '@mui/material/styles/cssUtils';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import NumpadPopover from './NumpadPopover';
 
 const Fade = React.forwardRef(function Fade(props, ref) {
     const {
@@ -150,16 +148,16 @@ const addProductModalStyle = {
     width: {
         xs: '95vw',   // 95% width on extra small screens
         sm: '90vw',   // 90% width on small screens
-        md: '90vw',   // 90% width on medium screens
-        lg: 1400,     // Fixed 1400px on large screens for two-column layout
-        xl: 1400      // Fixed 1400px on extra large screens
+        md: '85vw',   // 85% width on medium screens
+        lg: 1200,     // Fixed 1200px on large screens
+        xl: 1200      // Fixed 1200px on extra large screens
     },
     maxWidth: {
         xs: '95vw',
         sm: '90vw',
-        md: '90vw',
-        lg: '1400px',
-        xl: '1400px'
+        md: '85vw',
+        lg: '1200px',
+        xl: '1200px'
     },
     bgcolor: 'background.paper',
     border: '2px solid #000',
@@ -221,11 +219,7 @@ function MenuDashboard() {
             .react-transliterate-suggestions,
             [class*="react-transliterate-suggestions"],
             div[class*="suggestions"],
-            ul[class*="suggestions"],
-            .react-transliterate-suggestions-container,
-            [class*="react-transliterate-suggestions-container"],
-            div[id*="react-transliterate"],
-            ul[id*="react-transliterate"] {
+            ul[class*="suggestions"] {
                 position: fixed !important;
                 z-index: 99999 !important;
                 background: white !important;
@@ -234,13 +228,6 @@ function MenuDashboard() {
                 max-height: 200px !important;
                 overflow-y: auto !important;
                 pointer-events: auto !important;
-            }
-            /* Ensure Gujarati suggestions in table appear above other Gujarati fields */
-            .units-table-container .react-transliterate-suggestions,
-            .units-table-container [class*="react-transliterate-suggestions"],
-            .units-table-container div[class*="suggestions"],
-            .units-table-container ul[class*="suggestions"] {
-                z-index: 10000 !important;
             }
             .MuiModal-root {
                 overflow: visible !important;
@@ -252,10 +239,6 @@ function MenuDashboard() {
             .addProdutModal {
                 z-index: 1301 !important;
                 position: relative !important;
-                overflow: visible !important;
-            }
-            .addProdutModal > * {
-                overflow: visible !important;
             }
             .MuiPopover-root,
             .MuiMenu-root {
@@ -282,21 +265,12 @@ function MenuDashboard() {
             Authorization: `Bearer ${userInfo.token}`,
         },
     };
-    const [tabletMode, setTabletMode] = useState(() => {
-        const savedTabletMode = localStorage.getItem('tabletMode');
-        return savedTabletMode === 'true';
-    });
-
     useEffect(() => {
         getAllCategory();
         getSubCategory(menuId);
         getAllUnits();
         // getAllItems(menuId);
     }, []);
-
-    useEffect(() => {
-        localStorage.setItem('tabletMode', tabletMode.toString());
-    }, [tabletMode]);
 
     const [tab, setTab] = React.useState(0);
     const [open, setOpen] = React.useState(false);
@@ -350,7 +324,7 @@ function MenuDashboard() {
             preferredName: '',
             preferredNameIsGujarati: true
         })
-        setUnit({ unit: '', price: '', status: true, preferredName: '', preferredNameIsGujarati: true });
+        setUnit({ unit: '', price: '1', status: true, preferredName: '', preferredNameIsGujarati: true });
         setPrice(null)
         setSubCategoryId('')
         setCopyMenuCheckBox(false)
@@ -371,7 +345,7 @@ function MenuDashboard() {
     const [variantFieldsMap, setVariantFieldsMap] = useState({});
     const [subCategories, setSubCategories] = useState([]);
     const [getAllUnit, setGetAllUnit] = useState();
-    const [unit, setUnit] = React.useState({ unit: '', price: '', status: true, preferredName: '', preferredNameIsGujarati: true });
+    const [unit, setUnit] = React.useState({ unit: '', price: '1', status: true, preferredName: '', preferredNameIsGujarati: true });
     const [commonPreferredNameIsGujarati, setCommonPreferredNameIsGujarati] = useState(true);
     const [subCategoryId, setSubCategoryId] = useState(null);
     const priceInputRef = useRef(null);
@@ -471,15 +445,7 @@ function MenuDashboard() {
     const [inputError, setInputError] = useState('');
     const autoFocus = useRef(null)
     const [isDragDropMode, setIsDragDropMode] = useState(false);
-    const [isFavouriteDragDropMode, setIsFavouriteDragDropMode] = useState(false);
     const [tempSubCategories, setTempSubCategories] = useState([]);
-    const [favouriteItems, setFavouriteItems] = useState([]);
-    const [tempFavouriteItems, setTempFavouriteItems] = useState([]);
-    const [numpadAnchor, setNumpadAnchor] = useState(null);
-    const [numpadField, setNumpadField] = useState({ itemIndex: null, variantIndex: null });
-    const [numpadValue, setNumpadValue] = useState('');
-    const [editPriceNumpadAnchor, setEditPriceNumpadAnchor] = useState(null);
-    const [editPriceNumpadValue, setEditPriceNumpadValue] = useState('');
     if (loading) {
         toast.loading("Please wait...", {
             toastId: 'loading'
@@ -558,7 +524,7 @@ function MenuDashboard() {
             setError('Please Fill All Fields');
             return;
         }
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         console.log('Full Form Data', fullData)
 
         if (!editItem) {
@@ -690,7 +656,7 @@ function MenuDashboard() {
     };
 
     const getAllCategory = async () => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         try {
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getMenuCategory`, config);
             setMenuCategory(response.data)
@@ -702,7 +668,7 @@ function MenuDashboard() {
     // const getAllItems = async (menu) => {
     //     console.log('==>Menu Id Gett All Items <<==', menu)
     //     try {
-    //         const token = userInfo.token;
+    //         const token = localStorage.getItem('token');
     //         if (!token) {
     //             throw new Error("Token not found");
     //         }
@@ -723,7 +689,7 @@ function MenuDashboard() {
 
         if (enteredPassword === password) {
             try {
-                const token = userInfo.token;
+                const token = localStorage.getItem('token');
                 const response = await axios.delete(`${BACKEND_BASE_URL}menuItemrouter/removeItemData?itemId=${id}`, config)
                 setSuccess(response.data)
                 getAllUnits();
@@ -788,7 +754,7 @@ function MenuDashboard() {
         }
 
         setGetAllUnit(prevUnits => prevUnits.filter(u => u !== unit.unit));
-        setUnit({ unit: '', price: '', status: true, preferredName: '', preferredNameIsGujarati: commonPreferredNameIsGujarati });
+        setUnit({ unit: '', price: '1', status: true, preferredName: '', preferredNameIsGujarati: commonPreferredNameIsGujarati });
         setAddVariant(true);
         addingUnitName.current && addingUnitName.current.focus();
     };
@@ -890,7 +856,7 @@ function MenuDashboard() {
     const getSubCategory = async (menu) => {
         console.log('sub Category MenuId ===>>', menu)
         try {
-            const token = userInfo.token;
+            const token = localStorage.getItem('token');
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/ddlSubCategory?menuId=${menu}`, config);
             const subCategories = response.data;
             setSubCategories(subCategories);
@@ -918,7 +884,7 @@ function MenuDashboard() {
     };
     const updatedSubCategory = async (menu) => {
         try {
-            const token = userInfo.token;
+            const token = localStorage.getItem('token');
             const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/ddlSubCategory?menuId=${menu}`, config);
             const subCategories = response.data;
             setSubCategories(subCategories);
@@ -970,7 +936,7 @@ function MenuDashboard() {
 
     const getAllUnits = async () => {
         try {
-            const token = userInfo.token;
+            const token = localStorage.getItem('token');
             const response = await axios.get(`${BACKEND_BASE_URL}userrouter/getUnit`, config);
             setGetAllUnit(response.data);
         } catch (error) {
@@ -995,7 +961,7 @@ function MenuDashboard() {
         //     setSubCategoryStatus(false)
         // }
         // console.log('===>>>handle sub category ===>',subCategoryData)
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         try {
             setSideBarColor(true)
             await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getItemData?menuId=${menuCategory}&subCategoryId=${subCategoryId}`, config)
@@ -1072,7 +1038,7 @@ function MenuDashboard() {
         handleSubCategoryClick(finalSelected, menuId);
     }
     const handleEditPrice = async () => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         const isConfirm = window.confirm('Are you sure You want to Save this change')
         if (!isConfirm) {
             return
@@ -1141,7 +1107,7 @@ function MenuDashboard() {
         setGetAllUnit(prevGetAllUnit => [...prevGetAllUnit]);
     };
     const handleUpdateVariantsData = async () => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         const newData = {
             itemName: varinatsItemObject.itemName,
             itemDescription: varinatsItemObject.itemDescription,
@@ -1201,78 +1167,6 @@ function MenuDashboard() {
             setItemData(updatedItemData);
         }
     };
-
-    const handleNumpadOpen = (event, itemIndex, variantIndex) => {
-        // Only show numpad in tablet mode
-        if (!tabletMode) {
-            return;
-        }
-        // Prevent opening if already open for this field
-        if (numpadAnchor && numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex) {
-            return;
-        }
-
-        const currentPrice = itemData[itemIndex]?.variantsList[variantIndex]?.price || '';
-        setNumpadValue(String(currentPrice));
-        setNumpadField({ itemIndex, variantIndex });
-        setNumpadAnchor(event.currentTarget);
-    };
-
-    const handleNumpadClose = () => {
-        setNumpadAnchor(null);
-        setNumpadValue('');
-        setNumpadField({ itemIndex: null, variantIndex: null });
-
-        // Blur the active element to prevent immediate refocus
-        if (document.activeElement) {
-            document.activeElement.blur();
-        }
-    };
-
-    const handleNumpadChange = (newValue) => {
-        setNumpadValue(newValue);
-
-        // Update the price value in real-time
-        const { itemIndex, variantIndex } = numpadField;
-        if (itemIndex !== null && variantIndex !== null) {
-            const regex = /^\d*\.?\d*$/;
-            if (regex.test(newValue) || newValue === '') {
-                const updatedItemData = [...itemData];
-                updatedItemData[itemIndex].variantsList[variantIndex].price = newValue || '';
-                setItemData(updatedItemData);
-            }
-        }
-    };
-
-    const handleEditPriceNumpadOpen = (event) => {
-        // Only show numpad in tablet mode
-        if (!tabletMode) {
-            return;
-        }
-        const currentValue = editPriceType.percentage ? editPrice.percentage : editPrice.fixed;
-        setEditPriceNumpadValue(String(currentValue || ''));
-        setEditPriceNumpadAnchor(event.currentTarget);
-    };
-
-    const handleEditPriceNumpadClose = () => {
-        setEditPriceNumpadAnchor(null);
-        if (document.activeElement) {
-            document.activeElement.blur();
-        }
-    };
-
-    const handleEditPriceNumpadChange = (newValue) => {
-        setEditPriceNumpadValue(newValue);
-
-        const regex = /^\d*\.?\d*$/;
-        if (regex.test(newValue) || newValue === '') {
-            if (editPriceType.percentage) {
-                setEditPrice({ percentage: newValue, fixed: '' });
-            } else if (editPriceType.fixed) {
-                setEditPrice({ percentage: '', fixed: newValue });
-            }
-        }
-    };
     const handlePriceChange = (event, index) => {
         const { value } = event.target;
         const updatedVariantEditData = [...variantEditData];
@@ -1312,7 +1206,7 @@ function MenuDashboard() {
         }
     }
     const handleItemStatusChange = async (item) => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         const userEnteredPassword = prompt('Enter password to continue:');
         const correctPassword = '123';
 
@@ -1345,7 +1239,7 @@ function MenuDashboard() {
         setVariantMode({ isEdit: true })
     }
     const handleSubCategoryStatusChange = async () => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         const userEnteredPassword = prompt('Enter password to continue:');
         const correctPassword = '123';
 
@@ -1378,7 +1272,7 @@ function MenuDashboard() {
     }
 
     const handleToggleFavourite = async (item) => {
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         try {
             const newFavouriteStatus = !item.isFavourite;
             await axios.post(
@@ -1414,27 +1308,9 @@ function MenuDashboard() {
         setTempSubCategories(categoriesWithRank);
     };
 
-    const handleEnableFavouriteDragDrop = async () => {
-        setIsFavouriteDragDropMode(true);
-        try {
-            const response = await axios.get(`${BACKEND_BASE_URL}menuItemrouter/getFavouriteItemByBranch?menuId=${menuId}`, config);
-            const favourites = response.data || [];
-            const favouritesWithRank = favourites.map((item, index) => ({
-                ...item,
-                displayRank: item.displayRank || index
-            }));
-            setFavouriteItems(favourites);
-            setTempFavouriteItems(favouritesWithRank);
-        } catch (error) {
-            setError(error?.response?.data || 'Failed to fetch favourite items');
-        }
-    };
-
     const handleCancelDragDrop = () => {
         setIsDragDropMode(false);
-        setIsFavouriteDragDropMode(false);
         setTempSubCategories([]);
-        setTempFavouriteItems([]);
     };
 
     const handleSaveDragDrop = async () => {
@@ -1489,55 +1365,6 @@ function MenuDashboard() {
         setTempSubCategories(updatedItems);
     };
 
-    const handleOnFavouriteDragEnd = (result) => {
-        if (!result.destination) return;
-
-        const items = Array.from(tempFavouriteItems);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-
-        // Update displayRank for all items
-        const updatedItems = items.map((item, index) => ({
-            ...item,
-            displayRank: index
-        }));
-
-        setTempFavouriteItems(updatedItems);
-    };
-
-    const handleSaveFavouriteDragDrop = async () => {
-        try {
-            setLoading(true);
-            const payload = tempFavouriteItems.map((item, index) => ({
-                favouriteId: item.favouriteId,
-                itemId: item.itemId,
-                displayRank: index,
-                itemName: item.itemName
-            }));
-
-            await axios.post(
-                `${BACKEND_BASE_URL}menuItemrouter/reorderFavouriteItemByBranch`,
-                payload,
-                config
-            )
-                .then(response => {
-                    console.log('Favourite order updated:', response.data);
-                    setSuccess('Favourite order updated successfully');
-                    setIsFavouriteDragDropMode(false);
-                    setTempFavouriteItems([]);
-                })
-                .catch(error => {
-                    console.error('Error updating favourite order:', error);
-                    setError(error?.response?.data || 'Failed to update favourite order');
-                });
-        } catch (error) {
-            console.error('Error updating favourite order:', error);
-            setError(error?.response?.data || 'Network Error!!!...');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleCopySourceChange = (event) => {
         const selectedMenu = copyMenuItems.find(menu => menu.menuCategoryName === event.target.value);
         setCopySource(selectedMenu);
@@ -1549,7 +1376,7 @@ function MenuDashboard() {
         }
         console.log('==>Menu Name <<===', menuName);
         console.log('==>Source id <<===', copySource);
-        const token = userInfo.token;
+        const token = localStorage.getItem('token');
         const mainMenuId = menuName?.menuCategoryId;
         const sourceId = copySource?.menuCategoryId;
         let url = `${BACKEND_BASE_URL}menuItemrouter/copyPriceAndStatusByMenuId?sourceId=${sourceId}&targetId=${mainMenuId}`;
@@ -1708,57 +1535,19 @@ function MenuDashboard() {
                             </div>
                         </div>
                         {
-                            !editPriceMode && !isDragDropMode && !isFavouriteDragDropMode ? (
+                            !editPriceMode && !isDragDropMode ? (
                                 <div className='flex gap-4 col-span-3 justify-self-end w-full pr-3 h-full justify-end'>
                                     <div className='self-center'>
                                         <button className='addProductBtn' onClick={handleOpen}>Add Product</button>
                                     </div>
                                     <div className='self-center'>
-                                        <PopupState variant="popover" popupId="rearrange-popup-menu">
-                                            {(popupState) => (
-                                                <React.Fragment>
-                                                    <Button variant="contained" {...bindTrigger(popupState)} className='addProductBtn'>
-                                                        Rearrange
-                                                    </Button>
-                                                    <Menu
-                                                        {...bindMenu(popupState)}
-                                                        MenuListProps={{
-                                                            style: { zIndex: 9999 }
-                                                        }}
-                                                        slotProps={{
-                                                            paper: {
-                                                                style: {
-                                                                    zIndex: 9999
-                                                                }
-                                                            }
-                                                        }}
-                                                        style={{ zIndex: 9999 }}
-                                                    >
-                                                        <MenuItem onClick={() => { popupState.close(); handleEnableDragDrop(); }}>
-                                                            <CategoryIcon /><div className="pl-2">Category</div>
-                                                        </MenuItem>
-                                                        <MenuItem onClick={() => { popupState.close(); handleEnableFavouriteDragDrop(); }}>
-                                                            <StarIcon /><div className="pl-2">Favourite</div>
-                                                        </MenuItem>
-                                                    </Menu>
-                                                </React.Fragment>
-                                            )}
-                                        </PopupState>
+                                        <button className='addProductBtn' onClick={handleEnableDragDrop}>Rearrange</button>
                                     </div>
                                 </div>
                             ) : isDragDropMode ? (
                                 <div className='flex gap-4 col-span-3 justify-self-end w-full pr-3 h-full justify-end'>
                                     <div className='self-center'>
                                         <button className='addProductBtn w-full' onClick={handleSaveDragDrop}>Save</button>
-                                    </div>
-                                    <div className='self-center'>
-                                        <button className='w-full cancelButtonEdiPriceMode' onClick={handleCancelDragDrop}>Cancel</button>
-                                    </div>
-                                </div>
-                            ) : isFavouriteDragDropMode ? (
-                                <div className='flex gap-4 col-span-3 justify-self-end w-full pr-3 h-full justify-end'>
-                                    <div className='self-center'>
-                                        <button className='addProductBtn w-full' onClick={handleSaveFavouriteDragDrop}>Save</button>
                                     </div>
                                     <div className='self-center'>
                                         <button className='w-full cancelButtonEdiPriceMode' onClick={handleCancelDragDrop}>Cancel</button>
@@ -1780,7 +1569,7 @@ function MenuDashboard() {
             </div>
             <ToastContainer />
             <div className="maina_box">
-                {subCategories.length > 0 && !isDragDropMode && !isFavouriteDragDropMode && (
+                {subCategories.length > 0 && !isDragDropMode && (
                     <div className="sidebar overflow-y-auto blackCountLogoWrp shadow-2xl py-4 my-4 mr-4 static">
                         {subCategories.map(subcategory => (
                             <div
@@ -1843,12 +1632,12 @@ function MenuDashboard() {
                 )}
                 <TableContainer className=' '>
                     <div className="mt-4">
-                        {!editPriceMode && !itemDataNull && !isDragDropMode && !isFavouriteDragDropMode && (
+                        {!editPriceMode && !itemDataNull && !isDragDropMode && (
                             <div>
                                 <div className="patti rounded-lg shadow-md p-2 mb-2 bg-white w-full">
                                     {!editPriceMode ? (
                                         <div className="mainANotherDiv gap-4 justify-between">
-                                            <div className='flex gap-4 items-center'>
+                                            <div className='flex gap-4'>
                                                 <Search className='border'>
                                                     <SearchIconWrapper>
                                                         <SearchIcon />
@@ -1860,15 +1649,6 @@ function MenuDashboard() {
                                                         onChange={handleSearchChange}
                                                     />
                                                 </Search>
-                                                <div className="flex items-center gap-2 px-3 py-1 border rounded">
-                                                    <span className="text-sm font-medium">Tablet Mode</span>
-                                                    <Switch
-                                                        checked={tabletMode}
-                                                        onChange={(e) => setTabletMode(e.target.checked)}
-                                                        color="primary"
-                                                        size="small"
-                                                    />
-                                                </div>
                                                 {/* <button className='addProductBtn' onClick={() => { setEditPricePopUp(true); setEditPriceType({ percentage: true }) }} >Edit Price</button> */}
                                                 <PopupState variant="popover" popupId="demo-popup-menu" >
                                                     {(popupState) => (
@@ -2083,35 +1863,11 @@ function MenuDashboard() {
                                                                     InputProps={{
                                                                         endAdornment: <InputAdornment position="end">{variant.unit}</InputAdornment>,
                                                                         'aria-label': 'weight',
-                                                                        readOnly: tabletMode,
                                                                     }}
                                                                     value={variant.price}
-                                                                    onClick={(event) => tabletMode && handleNumpadOpen(event, itemIndex, variantIndex)}
-                                                                    onChange={!tabletMode ? (e) => {
-                                                                        const regex = /^\d*\.?\d*$/;
-                                                                        if (regex.test(e.target.value) || e.target.value === '') {
-                                                                            const updatedItemData = [...itemData];
-                                                                            updatedItemData[itemIndex].variantsList[variantIndex].price = e.target.value || '';
-                                                                            setItemData(updatedItemData);
-                                                                        }
-                                                                    } : undefined}
+                                                                    onChange={(event) => handleVariantPriceChange(event, itemIndex, variantIndex)}
                                                                     className=''
                                                                     autoComplete="off"
-                                                                    sx={{
-                                                                        cursor: tabletMode ? 'pointer' : 'text',
-                                                                        '& .MuiInput-root': {
-                                                                            '&:before': {
-                                                                                borderBottom: tabletMode && numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex && Boolean(numpadAnchor)
-                                                                                    ? '2px solid #1a73e8 !important'
-                                                                                    : undefined,
-                                                                            },
-                                                                            '&:after': {
-                                                                                borderBottom: tabletMode && numpadField.itemIndex === itemIndex && numpadField.variantIndex === variantIndex && Boolean(numpadAnchor)
-                                                                                    ? '2px solid #1a73e8 !important'
-                                                                                    : undefined,
-                                                                            }
-                                                                        }
-                                                                    }}
                                                                 />
                                                             </FormControl>
                                                         ))) : (
@@ -2131,7 +1887,7 @@ function MenuDashboard() {
 
                         )}
                     </div>
-                    {itemDataNull && !isDragDropMode && !isFavouriteDragDropMode && (
+                    {itemDataNull && !isDragDropMode && (
                         <div className="w-full flex justify-center">
                             <div className='text-center'>
                                 <RestaurantMenuIcon className='restaurantMenu' />
@@ -2156,86 +1912,6 @@ function MenuDashboard() {
                             </div>
                         </div>
                     )}
-                    {isFavouriteDragDropMode && tempFavouriteItems.length > 0 && (
-                        <TableContainer
-                            component={Paper}
-                            sx={{
-                                borderBottomLeftRadius: '10px',
-                                borderBottomRightRadius: '10px',
-                                paddingLeft: '12px',
-                                paddingRight: '12px',
-                                paddingTop: '12px',
-                                overflowY: 'auto',
-                            }}
-                            className='CustomDashBoardTableHeight'
-                        >
-                            <DragDropContext onDragEnd={handleOnFavouriteDragEnd}>
-                                <Table aria-label="favourite items table" sx={{ minWidth: 750, overflow: 'hidden' }}>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>No.</TableCell>
-                                            <TableCell>Name</TableCell>
-                                            <TableCell>Display Order</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <Droppable droppableId="favourites">
-                                        {(provided) => (
-                                            <TableBody
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                            >
-                                                {tempFavouriteItems.map((item, index) => (
-                                                    <Draggable
-                                                        key={item.favouriteId}
-                                                        draggableId={item.favouriteId}
-                                                        index={index}
-                                                    >
-                                                        {(provided, snapshot) => (
-                                                            <TableRow
-                                                                ref={provided.innerRef}
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                style={{
-                                                                    ...provided.draggableProps.style,
-                                                                    backgroundColor: snapshot.isDragging ? '#e3f2fd' : 'transparent',
-                                                                    cursor: 'grab'
-                                                                }}
-                                                            >
-                                                                <TableCell style={{ maxWidth: '15px', width: '15px' }}>
-                                                                    {index + 1}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <div className='flex items-center gap-2'>
-                                                                        <DragIndicatorIcon className='text-gray-400' />
-                                                                        {item.itemName}
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {item.displayRank}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )}
-                                                    </Draggable>
-                                                ))}
-                                                {provided.placeholder}
-                                            </TableBody>
-                                        )}
-                                    </Droppable>
-                                </Table>
-                            </DragDropContext>
-                        </TableContainer>
-                    )}
-                    {isFavouriteDragDropMode && tempFavouriteItems.length === 0 && (
-                        <div className="w-full flex justify-center items-center" style={{ minHeight: '400px' }}>
-                            <div className='text-center'>
-                                <StarIcon style={{ fontSize: '80px', color: '#9ca3af' }} />
-                                <br />
-                                <div className="text-2xl text-gray-600 mt-4">
-                                    No Favourite Items Found
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </TableContainer>
             </div>
             <Modal
@@ -2245,17 +1921,16 @@ function MenuDashboard() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={addProductModalStyle} className='addProdutModal'>
-                    <div style={{ flexShrink: 0, marginBottom: '8px' }}>
-                        <div className="text-lg p-1" style={{ padding: '4px 8px' }}>
+                    <div style={{ flexShrink: 0, marginBottom: '16px' }}>
+                        <div className="text-xl p-1">
                             {editData ? 'Edit Item' : 'Add Item'}
                         </div>
-                        <hr className='my-1 mb-2' style={{ marginTop: '4px', marginBottom: '8px' }} />
+                        <hr className='my-2 mb-4' />
                     </div>
-                    <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'row', gap: '12px', width: '100%' }}>
-                        {/* Left Side - Form Fields */}
-                        <div style={{ flex: '0 0 40%', overflow: 'hidden', position: 'relative', paddingTop: '5px', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0, maxWidth: '40%' }}>
-                            <div className="grid grid-cols-12 gap-3" style={{ width: '100%', maxWidth: '100%' }}>
-                                <div className="col-span-6">
+                    <div style={{ flex: 1, minHeight: 0, overflow: 'visible', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ flexShrink: 0, overflow: 'visible', position: 'relative', zIndex: 10 }}>
+                            <div className="grid grid-cols-12 gap-4">
+                                <div className="col-span-2">
                                     <TextField
                                         size='small'
                                         id="outlined-basic"
@@ -2281,30 +1956,9 @@ function MenuDashboard() {
                                         autoComplete="off"
                                         inputRef={autoFocus}
                                     />
+
                                 </div>
-                                <div className="col-span-6">
-                                    <TextField
-                                        size='small'
-                                        id="outlined-basic"
-                                        className={`w-full ${allFormValidation.itemShortKey ? 'border-red-500' : ''}`}
-                                        error={allFormValidation.itemShortKey}
-                                        helperText={allFormValidation.itemShortKey ? 'Short Code required' : ''}
-                                        label="Short Code"
-                                        variant="outlined"
-                                        autoComplete="off"
-                                        value={editData ? editData.itemShortKey : fullData.itemShortKey}
-                                        onChange={(e) => {
-                                            const uppercaseValue = e.target.value.toUpperCase();
-                                            if (editData) {
-                                                setEditData({ ...editData, itemShortKey: uppercaseValue });
-                                            } else {
-                                                setFullData({ ...fullData, itemShortKey: uppercaseValue });
-                                            }
-                                            setAllFormValidation({ ...allFormValidation, itemShortKey: false });
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-span-12">
+                                <div className="col-span-3 ">
                                     <TextField
                                         size='small'
                                         id="outlined-basic"
@@ -2325,7 +1979,7 @@ function MenuDashboard() {
                                         autoComplete="off"
                                     />
                                 </div>
-                                <div className="col-span-12" style={{ overflow: 'visible', position: 'relative', zIndex: 1400 }}>
+                                <div className="col-span-3" style={{ overflow: 'visible', position: 'relative', zIndex: 100 }}>
                                     <ReactTransliterate
                                         id="outlined-basic"
                                         value={editData ? editData.itemGujaratiName : fullData.itemGujaratiName}
@@ -2339,7 +1993,7 @@ function MenuDashboard() {
                                         }}
                                         variant="outlined"
                                         className={`w-full border p-2.5 rounded-md border-gray-300 text-sm ${allFormValidation.itemGujaratiName ? 'border-red-500' : ''}`}
-                                        style={{ fontSize: '14px', height: '40px', position: 'relative', zIndex: 1400 }}
+                                        style={{ fontSize: '14px', height: '40px' }}
                                         placeholder='ગુજરાતી નામ'
                                         error={allFormValidation.itemGujaratiName}
                                         helperText={allFormValidation.itemGujaratiName ? 'Gujarati Name is required' : ''}
@@ -2348,7 +2002,31 @@ function MenuDashboard() {
                                         autoComplete="off"
                                     />
                                 </div>
-                                <div className="col-span-12">
+
+                                <div className="col-span-2">
+                                    <TextField
+                                        size='small'
+                                        id="outlined-basic"
+                                        className={`w-full ${allFormValidation.itemShortKey ? 'border-red-500' : ''}`}
+                                        error={allFormValidation.itemShortKey}
+                                        helperText={allFormValidation.itemShortKey ? 'Short Code required' : ''}
+                                        label="Short Code"
+                                        variant="outlined"
+                                        autoComplete="off"
+                                        value={editData ? editData.itemShortKey : fullData.itemShortKey}
+                                        onChange={(e) => {
+                                            const uppercaseValue = e.target.value.toUpperCase();
+                                            if (editData) {
+                                                setEditData({ ...editData, itemShortKey: uppercaseValue });
+                                            } else {
+                                                setFullData({ ...fullData, itemShortKey: uppercaseValue });
+                                            }
+                                            setAllFormValidation({ ...allFormValidation, itemShortKey: false });
+                                        }}
+                                    />
+
+                                </div>
+                                <div className="col-span-3">
                                     <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label" size='small'>Sub Category</InputLabel>
                                         <Select
@@ -2384,7 +2062,7 @@ function MenuDashboard() {
                                         </Select>
                                     </FormControl>
                                 </div>
-                                <div className="col-span-12">
+                                <div className="col-span-2">
                                     <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label" size='small'>Spicy Level</InputLabel>
                                         <Select
@@ -2421,15 +2099,13 @@ function MenuDashboard() {
                                         </Select>
                                     </FormControl>
                                 </div>
-                                <div className="col-span-12">
+                                <div className="col-span-7">
                                     <TextField
                                         size='small'
                                         id="outlined-basic"
                                         className={`w-full ${allFormValidation.itemDescription ? 'border-red-500' : ''}`}
                                         label="Item Description"
                                         variant="outlined"
-                                        multiline
-                                        rows={3}
                                         value={editData ? editData.itemDescription : fullData.itemDescription}
                                         onChange={(e) => {
                                             editData
@@ -2442,258 +2118,258 @@ function MenuDashboard() {
                                         autoComplete="off"
                                     />
                                 </div>
-                                <div className="col-span-12 flex gap-4">
-                                    {editData && (
-                                        <>
-                                            <FormControlLabel control={<Checkbox onChange={() => {
-                                                setEditData((prev) => ({
-                                                    ...prev,
-                                                    isJain: !prev.isJain
-                                                }))
-                                            }} checked={editData?.isJain ? true : false} />} label="Jain" />
-                                            <FormControlLabel control={<Checkbox onChange={() => {
-                                                setEditData((prev) => ({
-                                                    ...prev,
-                                                    isPureJain: !prev.isPureJain
-                                                }))
-                                            }} checked={editData?.isPureJain ? true : false} />} label="Pure Jain" />
-                                        </>
-                                    )}
-                                    {!editData && (
-                                        <>
-                                            <FormControlLabel control={<Checkbox checked={fullData.isJain ? true : false} onChange={() => {
-                                                setFullData((prev) => ({
-                                                    ...prev,
-                                                    isJain: !prev.isJain
-                                                }))
-                                            }} />} label="Jain" />
-                                            <FormControlLabel control={<Checkbox checked={fullData.isPureJain ? true : false} onChange={() => {
-                                                setFullData((prev) => ({
-                                                    ...prev,
-                                                    isPureJain: !prev.isPureJain
-                                                }))
-                                            }} />} label="Pure Jain" />
-                                        </>
-                                    )}
-                                </div>
+                                {editData && (
+                                    <div className="col-span-1">
+                                        <FormControlLabel control={<Checkbox onChange={() => {
+                                            setEditData((prev) => ({
+                                                ...prev,
+                                                isJain: !prev.isJain
+                                            }))
+                                        }} checked={editData?.isJain ? true : false} />} label="Jain" />
+                                    </div>
+                                )}
+                                {editData && (
+                                    <div className="col-span-2">
+                                        <FormControlLabel control={<Checkbox onChange={() => {
+                                            setEditData((prev) => ({
+                                                ...prev,
+                                                isPureJain: !prev.isPureJain
+                                            }))
+                                        }} checked={editData?.isPureJain ? true : false} />} label="Pure Jain" />
+                                    </div>
+                                )}
+                                {!editData && (
+                                    <div className="col-span-1">
+                                        <FormControlLabel control={<Checkbox checked={fullData.isJain ? true : false} onChange={() => {
+                                            setFullData((prev) => ({
+                                                ...prev,
+                                                isJain: !prev.isJain
+                                            }))
+                                        }} />} label="Jain" />
+                                    </div>
+                                )}
+                                {!editData && (
+                                    <div className="col-span-2">
+                                        <FormControlLabel control={<Checkbox checked={fullData.isPureJain ? true : false} onChange={() => {
+                                            setFullData((prev) => ({
+                                                ...prev,
+                                                isPureJain: !prev.isPureJain
+                                            }))
+                                        }} />} label="Pure Jain" />
+                                    </div>
+                                )}
                             </div>
                         </div>
-
-                        {/* Right Side - Add Unit Section and Units Table */}
-                        <div style={{ flex: '0 0 58%', overflow: 'visible', display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0, maxWidth: '58%' }}>
-                            <div style={{ flexShrink: 0, overflow: 'visible', width: '100%' }}>
-                                <div className="text-lg p-1" style={{ padding: '4px 8px' }}>
-                                    {editData ? 'Edit Unit' : 'Add Unit'}
-                                </div>
-
-                                <div className='grid grid-cols-12 gap-2 mt-2' style={{ width: '100%', maxWidth: '100%', overflow: 'visible' }}>
-                                    <div className='col-span-3'>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label" size='small'>Unit</InputLabel>
-                                            <Select
-                                                size='small'
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                label="Unit"
-                                                value={unit.unit}
-                                                error={allFormValidation.unit ? true : false}
-                                                onChange={(e) => {
-                                                    setUnit({ ...unit, unit: e.target.value })
-                                                    setAllFormValidation({ ...allFormValidation, unit: false })
-                                                }}
-                                                inputRef={addingUnitName}
-                                                MenuProps={{
-                                                    PaperProps: {
-                                                        style: {
-                                                            maxHeight: 300,
-                                                            zIndex: 1302
-                                                        }
-                                                    },
-                                                    style: { zIndex: 1302 }
-                                                }}
-                                            >
-                                                {getAllUnit && getAllUnit.map((unitOption, index) => (
-                                                    <MenuItem key={index} value={unitOption}>{unitOption}</MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div className='col-span-4' style={{ overflow: 'visible', position: 'relative', zIndex: 1400 }}>
-                                        <div className="relative" style={{ overflow: 'visible', zIndex: 1400, position: 'relative' }}>
-                                            <ReactTransliterate
-                                                value={unit.preferredName}
-                                                onChangeText={(text) => {
-                                                    setUnit(prev => ({ ...prev, preferredName: text }));
-                                                    setAllFormValidation({ ...allFormValidation, preferredName: false });
-                                                }}
-                                                className={`w-full border p-2.5 rounded-md text-sm ${allFormValidation.preferredName ? 'border-red-500' : 'border-gray-300'}`}
-                                                placeholder='પસંદગીનું નામ'
-                                                lang='gu'
-                                                style={{ fontSize: '14px', height: '40px', position: 'relative', zIndex: 1400 }}
-                                            />
-                                            {allFormValidation.preferredName && (
-                                                <div className="text-red-500 text-xs mt-1">Preferred Name is required</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className='col-span-3'>
-                                        <TextField
-                                            size='small'
-                                            label='Price'
-                                            variant='outlined'
-                                            className='w-full'
-                                            value={unit.price}
-                                            error={allFormValidation.unitPrice ? true : false}
-                                            helperText={allFormValidation.unitPrice ? 'Price is required' : ''}
-                                            inputRef={priceInputRef}
-                                            onKeyPress={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    addVariantFields();
-                                                }
-                                            }}
-                                            onChange={(e) => {
-                                                const inputPrice = e.target.value;
-                                                const regex = /^\d*\.?\d*$/;
-                                                if (regex.test(inputPrice)) {
-                                                    setUnit({ ...unit, price: inputPrice });
-                                                    setAllFormValidation({ ...allFormValidation, unitPrice: false });
-                                                }
-                                            }}
-                                            autoComplete="off"
-                                        />
-                                    </div>
-                                    <div className='col-span-2 flex items-center'>
-                                        <button onClick={addVariantFields} className='addCategorySaveBtnSmall ao-compact-btn w-full'>Add</button>
-                                    </div>
-                                </div>
+                        <div style={{ flexShrink: 0, overflow: 'visible' }}>
+                            <div className="text-xl p-1 mt-4">
+                                {editData ? 'Edit Unit' : 'Add Unit'}
                             </div>
-                            {variantFields.length > 0 && (
-                                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'visible', width: '100%' }}>
-                                    <div className='mb-1' style={{ flexShrink: 0 }}>
-                                        <div className='text-base font-semibold p-1' style={{ padding: '4px 8px' }}>Units in Product</div>
-                                    </div>
 
-                                    <div style={{
-                                        flex: 1,
-                                        minHeight: 0,
-                                        overflowY: 'auto',
-                                        overflowX: 'hidden',
-                                        border: '1px solid #e5e7eb',
-                                        borderRadius: 8,
-                                        width: '100%',
-                                        maxWidth: '100%',
-                                        position: 'relative'
-                                    }}>
-                                        <div
-                                            className='px-2 py-2 sticky top-0 bg-white'
-                                            style={{
-                                                borderBottom: '1px solid #e5e7eb',
-                                                display: 'grid',
-                                                gridTemplateColumns: '30px 1fr 1.5fr 1fr 1fr',
-                                                columnGap: '8px',
-                                                alignItems: 'center',
-                                                zIndex: 100,
-                                                backgroundColor: '#ffffff',
-                                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                                                width: '100%',
-                                                maxWidth: '100%',
-                                                position: 'sticky'
+                            <div className='grid grid-cols-12 gap-4 mt-4'>
+                                <div className='col-span-2'>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label" size='small'>Unit</InputLabel>
+                                        <Select
+                                            size='small'
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            label="Unit"
+                                            value={unit.unit}
+                                            error={allFormValidation.unit ? true : false}
+                                            onChange={(e) => {
+                                                setUnit({ ...unit, unit: e.target.value })
+                                                setAllFormValidation({ ...allFormValidation, unit: false })
+                                            }}
+                                            inputRef={addingUnitName}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 300,
+                                                        zIndex: 1302
+                                                    }
+                                                },
+                                                style: { zIndex: 1302 }
                                             }}
                                         >
-                                            <div className='text-xs font-semibold text-gray-600 text-center'>#</div>
-                                            <div className='text-xs font-semibold text-gray-600'>Unit</div>
-                                            <div className='text-xs font-semibold text-gray-600'>Preferred Name</div>
-                                            <div className='text-xs font-semibold text-gray-600'>Price</div>
-                                            <div className='text-xs font-semibold text-gray-600 text-center'>Remove</div>
-                                        </div>
-
-                                        {variantFields.map((variant, index) => (
-                                            <div
-                                                key={index}
-                                                className='px-2 py-2'
-                                                style={{
-                                                    borderBottom: '1px solid #f3f4f6',
-                                                    display: 'grid',
-                                                    gridTemplateColumns: '30px 1fr 1.5fr 1fr 1fr',
-                                                    columnGap: '8px',
-                                                    alignItems: 'center',
-                                                    minWidth: 0,
-                                                    width: '100%',
-                                                    maxWidth: '100%'
-                                                }}
-                                            >
-                                                <div className='text-center'>{index + 1}</div>
-                                                <div style={{ minWidth: 0 }}>
-                                                    <TextField
-                                                        size='small'
-                                                        label=''
-                                                        placeholder='Unit'
-                                                        variant='outlined'
-                                                        className='w-full'
-                                                        value={variant.unit}
-                                                        disabled
-                                                        inputProps={{ style: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }}
-                                                    />
-                                                </div>
-                                                <div style={{ minWidth: 0, overflow: 'visible', position: 'relative', zIndex: variantFields.length - index + 1 }}>
-                                                    <ReactTransliterate
-                                                        value={variant.preferredName || ''}
-                                                        onChangeText={(text) => {
-                                                            const updatedVariantFields = variantFields.map((v, i) =>
-                                                                i === index ? { ...v, preferredName: text } : v
-                                                            );
-                                                            setVariantFields(updatedVariantFields);
-                                                            if (editData) {
-                                                                setEditData(prev => ({
-                                                                    ...prev,
-                                                                    variantsList: updatedVariantFields
-                                                                }));
-                                                            } else {
-                                                                setFullData(prev => ({
-                                                                    ...prev,
-                                                                    variantsList: updatedVariantFields
-                                                                }));
-                                                            }
-                                                        }}
-                                                        className='w-full border p-2 rounded-md border-gray-300 text-sm'
-                                                        placeholder='પસંદગીનું નામ'
-                                                        lang='gu'
-                                                        style={{ fontSize: '14px', height: '40px', position: 'relative', zIndex: variantFields.length - index + 1 }}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <TextField
-                                                        size='small'
-                                                        label=''
-                                                        placeholder='Price'
-                                                        variant='outlined'
-                                                        className='w-full'
-                                                        value={variant.price}
-                                                        onChange={(e) => {
-                                                            const regex = /^[0-9]*\.?[0-9]*$/;
-                                                            if (regex.test(e.target.value)) {
-                                                                handlePriceManualChange(variant, e.target.value)
-                                                            }
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className='flex items-center justify-center'>
-                                                    <button className='rounded-lg bg-gray-100 px-3 py-2 text-sm hover:bg-red-600 hover:text-white' onClick={() => handleDelete(index)}>Remove</button>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            {getAllUnit && getAllUnit.map((unitOption, index) => (
+                                                <MenuItem key={index} value={unitOption}>{unitOption}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className='col-span-4' style={{ overflow: 'visible', position: 'relative', zIndex: 200 }}>
+                                    <div className="relative" style={{ overflow: 'visible', zIndex: 200 }}>
+                                        <ReactTransliterate
+                                            value={unit.preferredName}
+                                            onChangeText={(text) => {
+                                                setUnit(prev => ({ ...prev, preferredName: text }));
+                                                setAllFormValidation({ ...allFormValidation, preferredName: false });
+                                            }}
+                                            className={`w-full border p-2.5 rounded-md text-sm ${allFormValidation.preferredName ? 'border-red-500' : 'border-gray-300'}`}
+                                            placeholder='પસંદગીનું નામ'
+                                            lang='gu'
+                                            style={{ fontSize: '14px', height: '40px' }}
+                                        />
+                                        {allFormValidation.preferredName && (
+                                            <div className="text-red-500 text-xs mt-1">Preferred Name is required</div>
+                                        )}
                                     </div>
                                 </div>
-                            )}
+                                <div className='col-span-2'>
+                                    <TextField
+                                        size='small'
+                                        label='Price'
+                                        variant='outlined'
+                                        className='w-full'
+                                        value={unit.price}
+                                        error={allFormValidation.unitPrice ? true : false}
+                                        helperText={allFormValidation.unitPrice ? 'Price is required' : ''}
+                                        inputRef={priceInputRef}
+                                        onFocus={() => {
+                                            // Auto-select first available unit if none is selected
+                                            if (!unit.unit && getAllUnit && getAllUnit.length > 0) {
+                                                setUnit(prev => ({ ...prev, unit: getAllUnit[0] }));
+                                            }
+                                        }}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                addVariantFields();
+                                            }
+                                        }}
+                                        onChange={(e) => {
+                                            const inputPrice = e.target.value;
+                                            const regex = /^\d*\.?\d*$/;
+                                            if (regex.test(inputPrice)) {
+                                                setUnit({ ...unit, price: inputPrice });
+                                                setAllFormValidation({ ...allFormValidation, unitPrice: false });
+                                            }
+                                        }}
+                                        autoComplete="off"
+                                    />
+                                </div>
+                                <div className='col-span-1 flex items-center'>
+                                    <button onClick={addVariantFields} className='addCategorySaveBtnSmall ao-compact-btn w-full'>Add</button>
+                                </div>
+                            </div>
                         </div>
+                        {variantFields.length > 0 && (
+                            <div className='mt-6' style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                                <div className='mb-2' style={{ flexShrink: 0 }}>
+                                    <div className='text-lg font-semibold p-1'>Units in Product</div>
+                                </div>
+
+                                <div style={{
+                                    flex: 1,
+                                    minHeight: 0,
+                                    overflowY: 'auto',
+                                    overflowX: 'hidden',
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: 8,
+                                }}>
+                                    <div
+                                        className='px-3 py-2 sticky top-0 bg-white'
+                                        style={{
+                                            borderBottom: '1px solid #e5e7eb',
+                                            display: 'grid',
+                                            gridTemplateColumns: '40px 1.5fr 2.5fr 1.5fr 1.5fr',
+                                            columnGap: '12px',
+                                            alignItems: 'center',
+                                            zIndex: 50,
+                                            backgroundColor: '#ffffff',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                                        }}
+                                    >
+                                        <div className='text-xs font-semibold text-gray-600 text-center'>#</div>
+                                        <div className='text-xs font-semibold text-gray-600'>Unit</div>
+                                        <div className='text-xs font-semibold text-gray-600'>Preferred Name</div>
+                                        <div className='text-xs font-semibold text-gray-600'>Price</div>
+                                        <div className='text-xs font-semibold text-gray-600 text-center'>Remove</div>
+                                    </div>
+
+                                    {variantFields.map((variant, index) => (
+                                        <div
+                                            key={index}
+                                            className='px-3 py-3'
+                                            style={{
+                                                borderBottom: '1px solid #f3f4f6',
+                                                display: 'grid',
+                                                gridTemplateColumns: '40px 1.5fr 2.5fr 1.5fr 1.5fr',
+                                                columnGap: '12px',
+                                                alignItems: 'center',
+                                                minWidth: 0
+                                            }}
+                                        >
+                                            <div className='text-center'>{index + 1}</div>
+                                            <div style={{ minWidth: 0 }}>
+                                                <TextField
+                                                    size='small'
+                                                    label=''
+                                                    placeholder='Unit'
+                                                    variant='outlined'
+                                                    className='w-full'
+                                                    value={variant.unit}
+                                                    disabled
+                                                    inputProps={{ style: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }}
+                                                />
+                                            </div>
+                                            <div style={{ minWidth: 0, overflow: 'visible' }}>
+                                                <ReactTransliterate
+                                                    value={variant.preferredName || ''}
+                                                    onChangeText={(text) => {
+                                                        const updatedVariantFields = variantFields.map((v, i) =>
+                                                            i === index ? { ...v, preferredName: text } : v
+                                                        );
+                                                        setVariantFields(updatedVariantFields);
+                                                        if (editData) {
+                                                            setEditData(prev => ({
+                                                                ...prev,
+                                                                variantsList: updatedVariantFields
+                                                            }));
+                                                        } else {
+                                                            setFullData(prev => ({
+                                                                ...prev,
+                                                                variantsList: updatedVariantFields
+                                                            }));
+                                                        }
+                                                    }}
+                                                    className='w-full border p-2 rounded-md border-gray-300 text-sm'
+                                                    placeholder='પસંદગીનું નામ'
+                                                    lang='gu'
+                                                    style={{ fontSize: '14px', height: '40px' }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <TextField
+                                                    size='small'
+                                                    label=''
+                                                    placeholder='Price'
+                                                    variant='outlined'
+                                                    className='w-full'
+                                                    value={variant.price}
+                                                    onChange={(e) => {
+                                                        const regex = /^[0-9]*\.?[0-9]*$/;
+                                                        if (regex.test(e.target.value)) {
+                                                            handlePriceManualChange(variant, e.target.value)
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className='flex items-center justify-center'>
+                                                <button className='rounded-lg bg-gray-100 px-3 py-2 text-sm hover:bg-red-600 hover:text-white' onClick={() => handleDelete(index)}>Remove</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <div className="flex gap-4 mt-4 w-full justify-end px-2" style={{ flexShrink: 0, paddingTop: '8px', borderTop: '1px solid #e5e7eb', marginTop: '8px' }}>
-                        <div style={{ width: '120px' }}>
-                            <button onClick={handleSUbmitForm} className="addCategorySaveBtnSmall w-full">Save</button>
+                    <div className="flex gap-9 mt-6 w-full mr-7 justify-end px-4" style={{ flexShrink: 0, paddingTop: '16px', borderTop: '1px solid #e5e7eb', marginTop: '16px' }}>
+                        <div className="w-1/5">
+                            <button onClick={handleSUbmitForm} className="addCategorySaveBtnSmall ml-4">Save</button>
                         </div>
-                        <div style={{ width: '120px' }}>
-                            <button onClick={handleClose} className="addCategoryCancelBtnSmall w-full">Cancel</button>
+                        <div className="w-1/5">
+                            <button onClick={handleClose} className="addCategoryCancelBtnSmall ml-4">Cancel</button>
                         </div>
                     </div>
                 </Box>
@@ -2741,24 +2417,13 @@ function MenuDashboard() {
                                     label="Percentage"
                                     autoComplete="off"
                                     value={editPrice.percentage}
-                                    onClick={tabletMode ? handleEditPriceNumpadOpen : undefined}
-                                    onChange={!tabletMode ? handlePercentageChange : undefined}
+                                    onChange={handlePercentageChange}
                                     error={!!inputError}
                                     helperText={inputError}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                                        readOnly: tabletMode,
                                     }}
                                     className='w-full'
-                                    sx={{
-                                        cursor: tabletMode ? 'pointer' : 'text',
-                                        '& .MuiOutlinedInput-root': {
-                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                borderColor: tabletMode && Boolean(editPriceNumpadAnchor) ? '#1a73e8' : undefined,
-                                                borderWidth: tabletMode && Boolean(editPriceNumpadAnchor) ? '2px' : undefined,
-                                            }
-                                        }
-                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -2772,24 +2437,13 @@ function MenuDashboard() {
                                     label="Fixed Amount"
                                     autoComplete="off"
                                     value={editPrice.fixed}
-                                    onClick={tabletMode ? handleEditPriceNumpadOpen : undefined}
-                                    onChange={!tabletMode ? handleFixedChange : undefined}
+                                    onChange={handleFixedChange}
                                     error={!!inputError}
                                     helperText={inputError}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end"><CurrencyRupeeIcon /></InputAdornment>,
-                                        readOnly: tabletMode,
                                     }}
                                     className='w-full'
-                                    sx={{
-                                        cursor: tabletMode ? 'pointer' : 'text',
-                                        '& .MuiOutlinedInput-root': {
-                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                borderColor: tabletMode && Boolean(editPriceNumpadAnchor) ? '#1a73e8' : undefined,
-                                                borderWidth: tabletMode && Boolean(editPriceNumpadAnchor) ? '2px' : undefined,
-                                            }
-                                        }
-                                    }}
                                 />
                             </FormControl>
                         </div>
@@ -3199,24 +2853,6 @@ function MenuDashboard() {
                     </div>
                 </Box>
             </Modal>
-            {tabletMode && (
-                <NumpadPopover
-                    open={Boolean(numpadAnchor)}
-                    anchorEl={numpadAnchor}
-                    onClose={handleNumpadClose}
-                    value={numpadValue}
-                    onChange={handleNumpadChange}
-                />
-            )}
-            {tabletMode && (
-                <NumpadPopover
-                    open={Boolean(editPriceNumpadAnchor)}
-                    anchorEl={editPriceNumpadAnchor}
-                    onClose={handleEditPriceNumpadClose}
-                    value={editPriceNumpadValue}
-                    onChange={handleEditPriceNumpadChange}
-                />
-            )}
             <ToastContainer />
         </div >
     )

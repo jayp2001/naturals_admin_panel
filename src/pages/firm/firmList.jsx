@@ -21,8 +21,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import SearchIcon from '@mui/icons-material/Search';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const styleStockIn = {
     position: 'absolute',
@@ -62,8 +64,8 @@ function FirmListTable() {
         pincode: '',
         firmMobileNo: '',
         otherMobileNo: '',
-        isSettlement: false,
-        csr: 0
+        resetMonth: '',
+        resetDay: ''
     });
     const [formDataError, setFormDataError] = React.useState({
         firmName: false,
@@ -71,14 +73,17 @@ function FirmListTable() {
         firmAddress: false,
         pincode: false,
         firmMobileNo: false,
-        csr: false
+        resetMonth: false,
+        resetDay: false
     });
     const [formDataErrorFeild, setFormDataErrorFeild] = React.useState([
         'firmName',
         'gstNumber',
         'firmAddress',
         'pincode',
-        'firmMobileNo'
+        'firmMobileNo',
+        'resetMonth',
+        'resetDay'
     ]);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
@@ -105,8 +110,8 @@ function FirmListTable() {
             pincode: '',
             firmMobileNo: '',
             otherMobileNo: '',
-            isSettlement: false,
-            csr: 0
+            resetMonth: '',
+            resetDay: ''
         })
         setFormDataError({
             firmName: false,
@@ -114,7 +119,8 @@ function FirmListTable() {
             firmAddress: false,
             pincode: false,
             firmMobileNo: false,
-            csr: false
+            resetMonth: false,
+            resetDay: false
         })
         setIsEditMode(false);
         setModalOpen(false);
@@ -128,13 +134,22 @@ function FirmListTable() {
             pincode: '',
             firmMobileNo: '',
             otherMobileNo: '',
-            isSettlement: false,
-            csr: 0
+            resetMonth: '',
+            resetDay: ''
         })
         setIsEditMode(false);
         setModalOpen(true);
     }
     const handleEditFirmOpen = (row) => {
+        // Parse resetDate from "mm-dd" format
+        let month = '';
+        let day = '';
+        if (row.resetDate) {
+            const [monthPart, dayPart] = row.resetDate.split('-');
+            month = monthPart;
+            day = dayPart;
+        }
+
         setFormData({
             firmId: row.firmId,
             firmName: row.firmName,
@@ -143,8 +158,8 @@ function FirmListTable() {
             pincode: row.pincode,
             firmMobileNo: row.firmMobileNo,
             otherMobileNo: row.otherMobileNo,
-            isSettlement: row.isSettlement === 1 || row.isSettlement === true,
-            csr: row.csr || 0
+            resetMonth: month,
+            resetDay: day
         })
         setIsEditMode(true);
         setModalOpen(true);
@@ -178,12 +193,11 @@ function FirmListTable() {
                     ...perv,
                     firmMobileNo: value.length === 0 || !regex.test(value) || value.length !== 10
                 }))
-            } else if (fieldName === 'csr') {
-                // CSR validation - numeric and between 1-100
-                const numericValue = parseInt(value);
+            } else if (fieldName === 'resetMonth' || fieldName === 'resetDay') {
+                // Reset month/day validation - required
                 setFormDataError((perv) => ({
                     ...perv,
-                    csr: value.length === 0 || !regex.test(value) || numericValue < 1 || numericValue > 100
+                    [fieldName]: value === '' || !value
                 }))
             }
         } else if (event === 'onFocus') {
@@ -220,6 +234,12 @@ function FirmListTable() {
     };
     const addFirm = async () => {
         setLoading(true);
+
+        // Format resetDate to "mm-dd" format
+        const resetDateFormatted = formData.resetMonth && formData.resetDay
+            ? `${formData.resetMonth.padStart(2, '0')}-${formData.resetDay.padStart(2, '0')}`
+            : null;
+
         await axios.post(`${BACKEND_BASE_URL}billingrouter/addFirmData`, {
             firmName: formData.firmName,
             gstNumber: formData.gstNumber,
@@ -227,8 +247,7 @@ function FirmListTable() {
             pincode: parseInt(formData.pincode),
             firmMobileNo: formData.firmMobileNo,
             otherMobileNo: formData.otherMobileNo,
-            isSettlement: formData.isSettlement ? 1 : 0,
-            csr: formData.isSettlement ? formData.csr : 0
+            resetDate: resetDateFormatted
         }, config)
             .then((res) => {
                 setLoading(false)
@@ -245,6 +264,12 @@ function FirmListTable() {
     }
     const updateFirm = async () => {
         setLoading(true);
+
+        // Format resetDate to "mm-dd" format
+        const resetDateFormatted = formData.resetMonth && formData.resetDay
+            ? `${formData.resetMonth.padStart(2, '0')}-${formData.resetDay.padStart(2, '0')}`
+            : null;
+
         await axios.post(`${BACKEND_BASE_URL}billingrouter/updateFirmData`, {
             firmId: formData.firmId,
             firmName: formData.firmName,
@@ -253,8 +278,7 @@ function FirmListTable() {
             pincode: parseInt(formData.pincode),
             firmMobileNo: formData.firmMobileNo,
             otherMobileNo: formData.otherMobileNo,
-            isSettlement: formData.isSettlement ? 1 : 0,
-            csr: formData.isSettlement ? formData.csr : 0
+            resetDate: resetDateFormatted
         }, config)
             .then((res) => {
                 setLoading(false)
@@ -294,13 +318,7 @@ function FirmListTable() {
         if (loading || success) {
 
         } else {
-            // Create validation fields array based on settlement status
-            const validationFields = [...formDataErrorFeild];
-            if (formData.isSettlement) {
-                validationFields.push('csr');
-            }
-
-            const isValidate = validationFields.filter(element => {
+            const isValidate = formDataErrorFeild.filter(element => {
                 if (formDataError[element] === true || formData[element] === '' || formData[element] === 0) {
                     setFormDataError((perv) => ({
                         ...perv,
@@ -405,6 +423,40 @@ function FirmListTable() {
     }
 
     const debounceFunction = React.useCallback(debounce(handleSearch), [])
+
+    // Get number of days in a month
+    const getDaysInMonth = (month) => {
+        if (!month) return 31;
+        const monthInt = parseInt(month);
+        const daysInMonth = {
+            1: 31,  // January
+            2: 29,  // February (using 29 to be safe)
+            3: 31,  // March
+            4: 30,  // April
+            5: 31,  // May
+            6: 30,  // June
+            7: 31,  // July
+            8: 31,  // August
+            9: 30,  // September
+            10: 31, // October
+            11: 30, // November
+            12: 31  // December
+        };
+        return daysInMonth[monthInt] || 31;
+    }
+
+    // Handle month change and validate day
+    const handleMonthChange = (newMonth) => {
+        const maxDays = getDaysInMonth(newMonth);
+        const currentDay = parseInt(formData.resetDay);
+
+        setFormData((prevState) => ({
+            ...prevState,
+            resetMonth: newMonth,
+            // Reset day if it's greater than max days in the new month
+            resetDay: currentDay > maxDays ? '' : prevState.resetDay
+        }));
+    }
     return (
         <div className='suppilerListContainer'>
             <div className='grid grid-cols-12 userTableContainer'>
@@ -693,7 +745,7 @@ function FirmListTable() {
                         </div>
                     </div>
                     <div className='mt-6 grid grid-cols-12 gap-6'>
-                        <div className='col-span-6'>
+                        <div className='col-span-12'>
                             <TextField
                                 value={formData.otherMobileNo}
                                 autoComplete='off'
@@ -715,54 +767,70 @@ function FirmListTable() {
                                 fullWidth
                             />
                         </div>
+                    </div>
+                    <div className='mt-6 grid grid-cols-12 gap-6'>
                         <div className='col-span-6'>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={formData.isSettlement}
-                                        onChange={(e) => {
-                                            setFormData((prevState) => ({
-                                                ...prevState,
-                                                isSettlement: e.target.checked,
-                                                csr: e.target.checked ? prevState.csr : 0
-                                            }))
-                                        }}
-                                        name="isSettlement"
-                                    />
-                                }
-                                label="Is Settlement"
-                                sx={{ fontSize: 14 }}
-                            />
+                            <FormControl fullWidth error={formDataError.resetMonth}>
+                                <InputLabel style={{ fontSize: 14 }}>Reset Month</InputLabel>
+                                <Select
+                                    value={formData.resetMonth}
+                                    label="Reset Month"
+                                    onChange={(e) => handleMonthChange(e.target.value)}
+                                    onFocus={() => handleFieldValidation('resetMonth', formData.resetMonth, 'onFocus')}
+                                    onBlur={() => handleFieldValidation('resetMonth', formData.resetMonth, 'onBlur')}
+                                    style={{ fontSize: 14 }}
+                                >
+                                    <MenuItem value="01">January</MenuItem>
+                                    <MenuItem value="02">February</MenuItem>
+                                    <MenuItem value="03">March</MenuItem>
+                                    <MenuItem value="04">April</MenuItem>
+                                    <MenuItem value="05">May</MenuItem>
+                                    <MenuItem value="06">June</MenuItem>
+                                    <MenuItem value="07">July</MenuItem>
+                                    <MenuItem value="08">August</MenuItem>
+                                    <MenuItem value="09">September</MenuItem>
+                                    <MenuItem value="10">October</MenuItem>
+                                    <MenuItem value="11">November</MenuItem>
+                                    <MenuItem value="12">December</MenuItem>
+                                </Select>
+                                {formDataError.resetMonth && (
+                                    <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5, fontSize: 12 }}>
+                                        Select reset month
+                                    </Typography>
+                                )}
+                            </FormControl>
+                        </div>
+                        <div className='col-span-6'>
+                            <FormControl fullWidth error={formDataError.resetDay}>
+                                <InputLabel style={{ fontSize: 14 }}>Reset Day</InputLabel>
+                                <Select
+                                    value={formData.resetDay}
+                                    label="Reset Day"
+                                    onChange={(e) => {
+                                        setFormData((prevState) => ({
+                                            ...prevState,
+                                            resetDay: e.target.value
+                                        }))
+                                    }}
+                                    onFocus={() => handleFieldValidation('resetDay', formData.resetDay, 'onFocus')}
+                                    onBlur={() => handleFieldValidation('resetDay', formData.resetDay, 'onBlur')}
+                                    style={{ fontSize: 14 }}
+                                    disabled={!formData.resetMonth}
+                                >
+                                    {Array.from({ length: getDaysInMonth(formData.resetMonth) }, (_, i) => i + 1).map((day) => (
+                                        <MenuItem key={day} value={day.toString().padStart(2, '0')}>
+                                            {day}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {formDataError.resetDay && (
+                                    <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5, fontSize: 12 }}>
+                                        Select reset day
+                                    </Typography>
+                                )}
+                            </FormControl>
                         </div>
                     </div>
-                    {formData.isSettlement && (
-                        <div className='mt-6 grid grid-cols-12 gap-6'>
-                            <div className='col-span-6'>
-                                <TextField
-                                    onFocus={(e) => handleFieldValidation('csr', e.target.value, 'onFocus')}
-                                    onBlur={(e) => handleFieldValidation('csr', e.target.value, 'onBlur')}
-                                    value={formData.csr}
-                                    autoComplete='off'
-                                    error={formDataError.csr}
-                                    helperText={formDataError.csr ? 'Enter CSR amount between 1-100' : ''}
-                                    name="csr"
-                                    id="outlined-required"
-                                    label="CSR Amount"
-                                    onChange={(e) => {
-                                        if (e.target.value === '' || regex.test(e.target.value)) {
-                                            setFormData((prevState) => ({
-                                                ...prevState,
-                                                csr: e.target.value,
-                                            }))
-                                        }
-                                    }}
-                                    InputProps={{ style: { fontSize: 14 } }}
-                                    InputLabelProps={{ style: { fontSize: 14 } }}
-                                    fullWidth
-                                />
-                            </div>
-                        </div>
-                    )}
                     <div className='mt-6 grid grid-cols-12 gap-6'>
                         <div className='col-start-7 col-span-3'>
                             <button className='addCategorySaveBtn' onClick={submitForm}>
