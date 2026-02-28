@@ -1610,8 +1610,8 @@ function FirmDetail() {
                                         {infoPopUpData?.itemData?.map((item, index) => (
                                             <tr key={index} className="border-b border-gray-100 hover:bg-blue-50">
                                                 <td className="py-2 pl-4 pr-2 font-medium text-gray-600">{index + 1}</td>
-                                                <td className="py-2 px-2 font-semibold text-gray-800">{item.itemName}</td>
-                                                <td className="py-2 px-3 text-center font-medium text-gray-700">{item.qty} {item.unit}</td>
+                                                <td className="py-2 px-2 font-semibold text-gray-800">{item.itemName} ({item.unit})</td>
+                                                <td className="py-2 px-3 text-center font-medium text-gray-700">{item.qty}</td>
                                                 <td className="py-2 px-3 text-right text-gray-700">₹{parseFloat(item.itemPrice).toLocaleString('en-IN')}</td>
                                                 <td className="py-2 pl-3 pr-4 text-right font-bold text-green-700">₹{parseFloat(item.price).toLocaleString('en-IN')}</td>
                                             </tr>
