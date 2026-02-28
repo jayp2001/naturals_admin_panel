@@ -1,254 +1,80 @@
 import ConsoleCard from "./component/consoleCard/consoleCard";
 import './dashboard.css';
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useLocation, Navigate, Outlet } from "react-router-dom";
-import jwt_decode from 'jwt-decode'
-import CryptoJS from 'crypto-js'
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useMemo } from "react";
+import jwt_decode from 'jwt-decode';
+import CryptoJS from 'crypto-js';
+
+const consoleCards = [
+    { name: "Menu", imgName: 'Menu', path: '/menu/Dashboard', roles: [1, 2] },
+    { name: "Sales Report", imgName: 'sales', path: '/menu/salesReport', roles: [1] },
+    { name: "Comments", imgName: 'comment', path: '/comment', roles: [1, 2] },
+    { name: "UPI", imgName: 'upi', path: '/upi', roles: [1] },
+    { name: "Firm List", imgName: 'firm', path: '/firmList', roles: [1] },
+    { name: "Customer List", imgName: 'customer', path: '/customerList', roles: [1, 2] },
+    { name: "Bill Categories", imgName: 'category', path: '/billCategories', roles: [1] },
+];
+
 function Dashboard() {
     const navigate = useNavigate();
-    const [value, setValue] = useState({
-        startDate: null,
-        endDate: null
-    });
+    const location = useLocation();
+
     const decryptData = (text) => {
         const key = process.env.REACT_APP_AES_KEY;
         const bytes = CryptoJS.AES.decrypt(text, key);
-        const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        return (data);
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     };
-    const user = JSON.parse(localStorage.getItem('userInfo'))
-    let location = useLocation();
+
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    const role = user?.userRights ? Number(decryptData(user.userRights)) : null;
+    const decoded = user ? jwt_decode(user.token) : null;
+    const expirationTime = decoded ? decoded.exp * 1000 - 60000 : null;
+
+    const allowedCards = useMemo(() => {
+        if (!role) return [];
+        return consoleCards.filter(
+            card => !card.roles?.length || card.roles.includes(role)
+        );
+    }, [role]);
+
     if (!user) {
-        return (<Navigate to="/login" state={{ from: location }} replace />)
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
-    const role = user.userRights ? decryptData(user.userRights) : '';
-    const decoded = jwt_decode(user.token);
-    const expirationTime = (decoded.exp * 1000) - 60000
 
+    const handleNavigation = (path) => {
+        const isTokenValid = expirationTime && new Date(expirationTime) > new Date();
+        if (isTokenValid) {
+            navigate(path);
+        } else {
+            if (window.confirm("You are not Authorised. You want to Login again ?")) {
+                navigate('/login');
+            }
+        }
+    };
 
-    const handleValueChange = (newValue) => {
-        setValue(newValue);
-    }
-    const goToAddUSer = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1) ? true : false
-        if (auth) {
-            navigate('/addUser')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToUserList = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1) ? true : false
-        if (auth) {
-            navigate('/userTable')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToHotel = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1) ? true : false
-        if (auth) {
-            navigate('/hotel/hotelTable')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToExpense = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/expense/dashboard')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToBank = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/bank/dashboard')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToReport = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/businessReport')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToStaff = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/staff/staffList')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToDelivery = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/deliveryManagement/Dashboard')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToTokenView = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/deliveryManagement/tokenView')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToTokenMobileView = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/deliveryManagement/tokenViewForMobile')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToDeliveryMan = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/deliveryManagement/DeliveryMan')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToMenu = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/menu/Dashboard')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToKhata = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/due/account')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToSales = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/menu/salesReport')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToAnalyze = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/category/analyze')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToComment = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/comment')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToUPI = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/upi')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToFirmList = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/firmList')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToCustomerList = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/customerList')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
-    const goToProductList = () => {
-        navigate('/productList')
-    }
-    const goToBillCategories = () => {
-        const auth = new Date(expirationTime) > new Date() && (role == 1 || role == 2) ? true : false
-        if (auth) {
-            navigate('/billCategories')
-        } else {
-            if (window.confirm("You are not Authorised. You want to Login again ?")) {
-                navigate('/login')
-            }
-        }
-    }
     return (
         <div className='mainBody'>
-            <div className="cardWrp">
-                <div className="grid lg:grid-cols-3 mobile:grid-cols-2 tablet1:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 desktop1:grid-cols-6 desktop2:grid-cols-7 desktop2:grid-cols-8' gap-6">
-
-                    <ConsoleCard goToAddUSer={goToMenu} name={"Menu"} imgName={'Menu'} />
-                    <ConsoleCard goToAddUSer={goToSales} name={"Sales Report"} imgName={'sales'} />
-                    <ConsoleCard goToAddUSer={goToComment} name={"Comments"} imgName={'comment'} />
-                    <ConsoleCard goToAddUSer={goToUPI} name={"UPI"} imgName={'upi'} />
-                    <ConsoleCard goToAddUSer={goToFirmList} name={"Firm List"} imgName={'firm'} />
-                    <ConsoleCard goToAddUSer={goToCustomerList} name={"Customer List"} imgName={'customer'} />
-                    <ConsoleCard goToAddUSer={goToBillCategories} name={"Bill Categories"} imgName={'category'} />
-                </div>
+            <div className="cardWrp relative">
+                {allowedCards.length > 0 ? (
+                    <div className="grid grid-cols-2 min-[640px]:grid-cols-3 min-[768px]:grid-cols-4 min-[1024px]:grid-cols-5 min-[1280px]:grid-cols-6 min-[1536px]:grid-cols-7 min-[1920px]:grid-cols-8 gap-x-4 gap-y-6">
+                        {allowedCards.map((card, index) => (
+                            <ConsoleCard
+                                key={index}
+                                goToAddUSer={() => handleNavigation(card.path)}
+                                name={card.name}
+                                imgName={card.imgName}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-2xl font-bold select-none">
+                        You are not Authorised
+                    </div>
+                )}
             </div>
         </div>
-    )
+    );
 }
 
 export default Dashboard;
